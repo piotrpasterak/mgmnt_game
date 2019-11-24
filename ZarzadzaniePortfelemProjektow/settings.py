@@ -39,7 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'redactor',
     'accounts.apps.AccountsConfig',
+    'engine',
     'pages',
+    'process',
 ]
 
 MIDDLEWARE = [
