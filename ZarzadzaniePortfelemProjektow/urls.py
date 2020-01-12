@@ -24,5 +24,6 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
     path('game/', GameView.as_view(), name='game-main'),
+    path('api/', include('engine.urls')),
     path('', TemplateView.as_view(template_name='home.html'), name='home'),
 ]
