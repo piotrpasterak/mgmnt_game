@@ -5,19 +5,10 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
+    <h1>Zarządzanie portfeliem projektów</h1><hr>
 
-<div>
+<div class="app">
     {{ 'homepage-content'|html_content }}
 </div>
 
-{% if user.is_authenticated %}
-<h2>Hi {{ user.username }}! </h2>
-<p><a href="{% url 'logout' %}">logout</a></p>
-<p><a href="{% url 'password_reset' %}">reset password</a></p>
-{% else %}
-<h2>Welcome, you are not logged in</h2>
-<a href="{% url 'login' %}">login</a>
-<p>or</p>
-<a href="{% url 'signup' %}">register</a>
-{% endif %}
 {% endblock %}
