@@ -1,0 +1,26 @@
+<div id="adminbar">
+    <ul class="button-left">
+        <li onclick="location.href='{% url 'home' %}';"><i class="fa fa-home"></i> Informacje</li>
+    </ul>
+    <ul class="button-left">
+        <li onclick="location.href='{% url 'home' %}';"><i class="fa fa-play-circle"></i> Gra</li>
+    </ul>
+    <ul class="button-left">
+        <li onclick="location.href='{% url 'home' %}';"><i class="fa fa-book"></i> Wyniki</li>
+    </ul>
+
+    <ul id="logged_as">
+        <li>
+            {% if user.is_authenticated %}
+                <b> {{ user.username }} :</b>
+                <span><a id="logout" href="{% url 'logout' %}">wyloguj</a></span>
+                <b>lub</b>
+                <span><a id="logout" href="{% url 'password_reset' %}">zmień hasło</a></span>
+            {% else %}
+                <span><a id="logout" href="{% url 'login' %}">Zaloguj się</a></span>
+                <b>lub</b>
+                <span><a id="logout" href="{% url 'signup' %}">Zarejestruj</a></span>
+            {% endif %}
+        </li>
+    </ul>
+</div>
