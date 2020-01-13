@@ -50,10 +50,10 @@
             // Fire off the request to backend
             request = $.ajax({
                 headers: {'X-CSRFToken': $("[name=csrfmiddlewaretoken]").val()},
-                url: "{% url 'game-main' %}",
+                url: "{% url 'api-init-game' %}",
                 type: "post",
                 data: formData,
-                dataType: 'json',
+                dataType: 'html',
                 encode: true
             });
 
@@ -65,7 +65,9 @@
 
             // Callback handler that will be called on failure
             request.fail(function (jqXHR, textStatus, errorThrown) {
-                console.log(textStatus, errorThrown);
+                console.log(jqXHR);
+                console.log(textStatus);
+                console.log(errorThrown);
                 $('#game-main').html(errorThrown);
             });
 

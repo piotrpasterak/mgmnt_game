@@ -1,6 +1,6 @@
 # -*- coding: UTF-8 -*-
 
-from django.http import HttpResponseBadRequest
+from django.http import HttpResponseBadRequest, JsonResponse
 from django.views.generic import TemplateView
 
 
@@ -11,7 +11,8 @@ class PostTemplateView(TemplateView):
 
     def post(self, request, *args, **kwargs):
         context = self.get_context_data()
-        return self.render_to_response(context)
+        rendered = self.render_to_response(context)
+        return rendered
 
 
 class InitGame(PostTemplateView):
