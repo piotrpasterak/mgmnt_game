@@ -1,10 +1,10 @@
 import numpy as np
-import pandas as pd
-import itertools as itt
-from scipy import stats
-import matplotlib.pyplot as plt
-import matplotlib.ticker as ticker
-from collections import Counter
+# import pandas as pd
+# import itertools as itt
+# from scipy import stats
+# import matplotlib.pyplot as plt
+# import matplotlib.ticker as ticker
+# from collections import Counter
 
 
 class Projekty():

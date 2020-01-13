@@ -3,6 +3,7 @@
 from django.http import HttpResponseBadRequest, JsonResponse
 from django.views.generic import TemplateView
 
+from .tools.game_engine import GameEngine, RoundEngine
 
 class PostTemplateView(TemplateView):
 
@@ -22,7 +23,9 @@ class InitGame(PostTemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        
+        ge = GameEngine()
+        context['game'] = ge.init_game(self.request.user)
+        context['game_id'] = context['game'].id
 
         return context
 
