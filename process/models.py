@@ -12,7 +12,8 @@ class Game(models.Model):
     start_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return "game (%s) [%s]" % (str(self.start_date), str(self.user))
+        datestring = self.start_date.strftime("%Y-%m-%d %H:%M:%S")
+        return "game (%s) [%s]" % (datestring, str(self.user))
 
 
 class Round(models.Model):
