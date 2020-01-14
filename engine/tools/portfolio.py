@@ -1,3 +1,7 @@
+# -*- coding: UTF-8 -*-
+
+from json import loads, dumps
+
 import numpy as np
 # import pandas as pd
 # import itertools as itt
@@ -86,6 +90,83 @@ class Projekty():
         df = self.wyniki
         df = df.assign(sr_zysk = np.array(SZ))
         return df
+
+
+class Baza(object):
+
+    projekty = 9
+    a_min = 5
+    a_max = 20
+    k_min = 20 # koszty
+    k_max = 31
+    s_min = 31 # sprzedaż
+    s_max = 40
+    # a_max<k_min<k_max<s_min
+    alfa = 5
+    beta = 5
+
+    def __init__(self):
+        super(Baza, self).__init__()
+
+
+class Runda(Baza):
+
+    def __init__(self, seed):
+        super(Runda, self).__init__()
+        self.runda = seed
+        self.r1 = np.random.RandomState(self.runda)
+        self.obliczenia()
+        return
+
+    def obliczenia(self):
+        # generowanie danych
+        self.a = self.r1.randint(self.a_min, self.a_max, self.projekty)
+        self.koszty = self.r1.randint(self.k_min, self.k_max, self.projekty)
+        self.sprz = self.r1.randint(self.s_min, self.s_max, self.projekty)
+        self.b = 2*self.sprz-self.a
+        
+        # obliczenia podstawowe
+        self.zyski = self.sprz-self.koszty
+        self.zwrot = np.round((self.zyski/self.koszty), 2)
+        self.ryzyko = np.round((self.koszty-self.a)/(self.sprz-self.a+2), 2)
+
+        # # do tworzenia tabeli
+        # self.columns = ['koszt', 'zysk', 'zwrot', 'ryzyko']
+        # self.index = ['P'+str(p+1) for p in range(self.projekty)]
+        # self.data = zip(self.koszty, self.zyski, self.zwrot, self.ryzyko)
+        # self.dane = pd.DataFrame(self.data, columns=self.columns, index = self.index)
+        return
+
+    def spakuj_dane(self):
+        wynik = {}
+        # dane podstawowe
+        wynik['projekty'] = self.projekty
+        wynik['runda'] = self.runda
+        # dane wygenerowane
+        wynik['a'] = list(map(int, list(self.a)))
+        wynik['koszty'] = list(map(int, list(self.koszty)))
+        wynik['sprz'] = list(map(int, list(self.sprz)))
+        wynik['b'] = list(map(int, list(self.b)))
+        wynik['zyski'] = list(map(int, list(self.zyski)))
+        wynik['zwrot'] = list(map(float, list(self.zwrot)))
+        wynik['ryzyko'] = list(map(float, list(self.ryzyko)))
+        return wynik
+
+    def rozpakuj_dane(self, dane):
+        if type(dane) is str:
+            # jeśli zamiast słownika danych otrzymamy tekst
+            dane = loads(dane)
+
+        self.projekty = dane['projekty']
+        self.runda = dane['runda']
+        self.a = np.array(dane['a'])
+        self.koszty = np.array(dane['koszty'])
+        self.sprz = np.array(dane['sprz'])
+        self.b = np.array(dane['b'])
+        self.zyski = np.array(dane['zyski'])
+        self.zwrot = np.array(dane['zwrot'])
+        self.ryzyko = np.array(dane['ryzyko'])
+        return
 
 
 class Portfele(Projekty):

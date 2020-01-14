@@ -1,5 +1,7 @@
 # -*- coding: UTF-8 -*-
 
+from json import loads
+
 from django.http import HttpResponseBadRequest, JsonResponse
 from django.views.generic import TemplateView
 
@@ -26,6 +28,14 @@ class InitGame(PostTemplateView):
         ge = GameEngine()
         context['game'] = ge.init_game(self.request.user)
         context['game_id'] = context['game'].id
+
+        re = RoundEngine(context['game'])
+        r = re.init_round()
+        context['round'] = r
+        context['round_data'] = loads(r.possibilities)
+        context['round_iterator'] = list(range(context['round_data']['projekty']))
+
+        print(context)
 
         return context
 

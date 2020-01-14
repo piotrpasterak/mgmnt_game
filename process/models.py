@@ -22,7 +22,7 @@ class Round(models.Model):
 
     start_date = models.DateTimeField(auto_now_add=True)
     end_date = models.DateTimeField(auto_now=True)
-    total_time = models.FloatField(blank=True, null=True)
+    total_time = models.FloatField(default=0)
 
     seed = models.IntegerField(blank=True, null=True)
     possibilities = models.TextField(blank=True, null=True)
@@ -33,7 +33,8 @@ class Round(models.Model):
     def calculate_total_time(self):
         n = datetime.now()
         delta = n - self.start_date
-        return delta.total_seconds()
+        self.total_time = delta.total_seconds()
+        return self.total_time
 
     def save(self, *args, **kwargs):
         if self.start_date:

@@ -135,6 +135,8 @@ MEDIA_DIRS = [
     os.path.join(BASE_DIR, "media"),
 ]
 
+MAX_SEED = 2147483647 # max number stored in DB
+
 try:
     from .local_settings import *
 except ImportError:
