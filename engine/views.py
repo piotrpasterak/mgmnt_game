@@ -33,7 +33,7 @@ class InitGame(PostTemplateView):
         r = re.init_round()
         context['round'] = r
         context['round_data'] = loads(r.possibilities)
-        context['round_iterator'] = list(range(context['round_data']['projekty']))
+        context['round_iterator'] = list(range(1, 1+context['round_data']['projekty']))
 
         print(context)
 
