@@ -51,7 +51,6 @@ class RoundSubmit(PostTemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        print(self.post)
 
         rd = Round.objects.get(pk=self.post['roundId'])
         context['round'] = rd
