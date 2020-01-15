@@ -3,7 +3,7 @@
         <a href=".." class="icon icon-home"> Zarządzanie portfelem projektów</a>
     </div>
     <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-
+        {% if user.is_authenticated %}
     {# Links are just working stubbs. To be changed for navigation between steps in game. #}
         {% if request.path == '/'%}
         <ul class="current">
@@ -45,6 +45,7 @@
                     <a href="{% url 'signup' %}">Register</a>
                 </li>
             </ul>
+        {% endif %}
         {% endif %}
 
 
