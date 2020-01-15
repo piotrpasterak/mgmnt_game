@@ -1,0 +1,56 @@
+{% load api_filters %}
+
+<table>
+    <tr>
+        <th>
+            &nbsp;
+        </th>
+        <th>
+            Koszt
+        </th>
+        <th>
+            Zysk
+        </th>
+        <th>
+            Zwrot
+        </th>
+        <th>
+            Ryzyko
+        </th>
+        <th>
+            &nbsp;
+        </th>
+        <th>
+            Wynik
+        </th>
+    </tr>
+    {% for itr in round_iterator %}
+        <tr>
+            <td>
+                Projekt{{ itr }}
+            </td>
+            <td>
+                {{ round_data.koszty|get_at_index:forloop.counter0 }}
+            </td>
+            <td>
+                {{ round_data.zyski|get_at_index:forloop.counter0 }}
+            </td>
+            <td>
+                {{ round_data.zwrot|get_at_index:forloop.counter0 }}
+            </td>
+            <td>
+                {{ round_data.ryzyko|get_at_index:forloop.counter0 }}
+            </td>
+            <td>
+                <label>
+                    <input type="checkbox" name="project{{ forloop.counter0 }}"
+                        value={{ forloop.counter0 }}{% if checkboxes %} {{ checkboxes|get_at_index:forloop.counter0 }}{% endif %}>
+                    P{{ forloop.counter }}
+                </label>
+            </td>
+            <td>
+                ---
+            </td>
+        </tr>
+    {% endfor %}
+</table>

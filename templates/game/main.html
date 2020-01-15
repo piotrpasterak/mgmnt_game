@@ -41,12 +41,15 @@
                 request.abort();
             }
 
+            //Define Data to be sent
+            let formData = $('#'+form).serialize();
 
             // Fire off the request to backend
             request = $.ajax({
                 headers: {'X-CSRFToken': $("[name=csrfmiddlewaretoken]").val()},
                 url: targetUrl,
                 type: "post",
+                data: formData,
                 dataType: 'html',
                 encode: true
             });
