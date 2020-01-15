@@ -13,6 +13,8 @@ class PostTemplateView(TemplateView):
         return HttpResponseBadRequest('Bad GET request!')
 
     def post(self, request, *args, **kwargs):
+        print(request)
+        print(request.POST)
         context = self.get_context_data()
         rendered = self.render_to_response(context)
         return rendered
@@ -35,9 +37,21 @@ class InitGame(PostTemplateView):
         context['round_data'] = loads(r.possibilities)
         context['round_iterator'] = list(range(1, 1+context['round_data']['projekty']))
 
-        print(context)
-
         return context
+
+
+class RoundSubmit(PostTemplateView):
+    # this class is finishing the round
+    template_name = "game/submit_round.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        print(self.request)
+        print(self.request.__dict__)
+        print(self.request.POST)
+        print(dict(self.request.POST))
+        return context
+
 
 class InitRound(PostTemplateView):
     # this class creates round to known game
@@ -58,14 +72,6 @@ class ProjectView(PostTemplateView):
 class WalletAnalysisView(PostTemplateView):
     # this class is plotting wallet analysis
     template_name = "game/wallet_plot.html"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return context
-
-class RoundSubmit(PostTemplateView):
-    # this class is finishing the round
-    template_name = "game/submit_round.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

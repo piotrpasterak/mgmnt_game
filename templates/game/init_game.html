@@ -1,6 +1,9 @@
 {% load api_filters %}
 
-<form>
+<form id="form_round" class="form-horizontal" method="post" onsubmit="game_request(event, 'form_round', '{% url 'api-submit-round' %}')">
+    <input type="hidden" name="roundSeed" value="{{ round.seed }}">
+    <input type="hidden" name="roundId" value="{{ round.id }}">
+    {% csrf_token %}
     <table>
         <tr>
             <th>
@@ -54,4 +57,5 @@
             </tr>
         {% endfor %}
     </table>
+    <input type="submit" value="Generuj zyski!">
 </form>
