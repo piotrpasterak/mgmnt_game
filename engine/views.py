@@ -15,9 +15,12 @@ class PostTemplateView(TemplateView):
 
     def post(self, request, *args, **kwargs):
         p = dict(request.POST)
+        prohibited_keys = []
+        if 'checkbox_name' in self.__dict__.keys():
+            prohibited_keys.append(self.checkbox_name)
         for key in p.keys():
             if type(p[key]) is list:
-                if key.startswith("fields"):
+                if key in prohibited_keys:
                     continue
                 p[key] = p[key][0]
         self.post = p
@@ -49,6 +52,7 @@ class InitGame(PostTemplateView):
 
 class RoundSubmit(PostTemplateView):
     # this class is finishing the round
+    checkbox_name = 'fields[]'
     template_name = "game/submit_round.html"
 
     def get_context_data(self, **kwargs):
@@ -65,10 +69,12 @@ class RoundSubmit(PostTemplateView):
         return context
 
     def add_checkboxes_to_context(self, context):
+        if self.checkbox_name not in self.post:
+            return context
         checkboxes = []
         for itr in range(context['round_data']['projekty']):
             name = str(itr)
-            if name in self.post['fields[]']:
+            if name in self.post[self.checkbox_name]:
                 checkboxes.append(" checked")
             else:
                 checkboxes.append(" ")
