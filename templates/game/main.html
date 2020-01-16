@@ -5,6 +5,15 @@
 {% block title %}Game{% endblock %}
 
 {% block content %}
+    <div id="myModal" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="modal_content"></div>
+        </div>
+
+    </div>
     <div id="game-main" class="app">
         <form id="form_game" class="form-horizontal" method="post"
               onsubmit="game_request(event, 'form_game', '{% url 'api-init-game' %}')">
@@ -90,10 +99,82 @@
                 }
             });
             $("#generate_revenue").prop('disabled', amount_of_checked < lower_limit || amount_of_checked > upper_limit);
-            
+        }
+
+        function load_project_graph(project_id) {
+            let request;
+
+            // Abort any pending request
+            if (request) {
+                request.abort();
+            }
+
+            //Define Data to be sent
+            let formData = {
+                'project_id': project_id,
+                'round_id': $("[name='roundId']").val()
+            };
+
+
+            // Fire off the request to backend
+            request = $.ajax({
+                headers: {'X-CSRFToken': $("[name=csrfmiddlewaretoken]").val()},
+                url: "{% url 'api-show-project' %}",
+                type: "post",
+                data: formData,
+                dataType: 'html',
+                encode: true
+            });
+
+            // Get the modal
+            let modal = document.getElementById("myModal");
+
+            // Callback handler that will be called on success
+            request.done(function (response, textStatus, jqXHR) {
+                console.log(response);
+                modal.style.display = "block";
+                $('#modal_content').html(response);
+            });
+
+            // Callback handler that will be called on failure
+            request.fail(function (jqXHR, textStatus, errorThrown) {
+                console.log(jqXHR);
+                console.log(textStatus);
+                console.log(errorThrown);
+                modal.style.display = "block";
+                $('#modal_content').html(errorThrown);
+            });
+
+            // Callback handler that will be called regardless
+            // if the request failed or succeeded
+            request.always(function () {
+                // Reenable the inputs
+                inputs.prop("disabled", false);
+            });
+
 
         }
 
+        $(document).ready(function () {
+
+            // Get the modal
+            let modal = document.getElementById("myModal");
+            // Get the <span> element that closes the modal
+            let span = document.getElementsByClassName("close")[0];
+
+
+            // When the user clicks on <span> (x), close the modal
+            span.onclick = function () {
+                modal.style.display = "none";
+            };
+
+            // When the user clicks anywhere outside of the modal, close it
+            window.onclick = function (event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+        });
 
     </script>
 {% endblock %}
