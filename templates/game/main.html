@@ -6,7 +6,8 @@
 
 {% block content %}
     <div id="game-main" class="app">
-        <form id="form_game" class="form-horizontal" method="post" onsubmit="game_request(event, 'form_game', '{% url 'api-init-game' %}')">
+        <form id="form_game" class="form-horizontal" method="post"
+              onsubmit="game_request(event, 'form_game', '{% url 'api-init-game' %}')">
             {% csrf_token %}
             <div class="container">
                 <h1>Zarządzanie Portfelem Projektów</h1>
@@ -20,7 +21,8 @@
                 <div class="row" style="margin-top:20px">
                     <div class="col-6 col-centered">
                         <span class="input-group-btn">
-                            <input id="submit" class="btn btn-danger btn-big" type="submit" name="submit" value="S T A R T">
+                            <input id="submit" class="btn btn-danger btn-big" type="submit" name="submit"
+                                   value="S T A R T">
                         </span>
                     </div>
                 </div>
@@ -42,7 +44,7 @@
             }
 
             //Define Data to be sent
-            let formData = $('#'+form).serialize();
+            let formData = $('#' + form).serialize();
 
             // Fire off the request to backend
             request = $.ajax({
@@ -71,10 +73,27 @@
             // Callback handler that will be called regardless
             // if the request failed or succeeded
             request.always(function () {
-                invoke_loader('game-main', 5000)
+
             });
 
 
         }
+
+
+        function check_project_amount() {
+            let amount_of_checked = 0;
+            let lower_limit = 1;
+            let upper_limit = 3;
+            $("[name='fields[]']").each(function () {
+                if (this.checked) {
+                    amount_of_checked++;
+                }
+            });
+            $("#generate_revenue").prop('disabled', amount_of_checked < lower_limit || amount_of_checked > upper_limit);
+            
+
+        }
+
+
     </script>
 {% endblock %}

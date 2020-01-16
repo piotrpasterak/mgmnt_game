@@ -6,10 +6,15 @@
     <input type="hidden" name="gameId" value="{{ game_id }}">
     {% csrf_token %}
     {% game_table round_data round_iterator checkboxes %}
-    <input type="submit" value="Generuj ponownie">
-    lub
+    <div class="row">
+        <div class="col-6">
+    <input id="generate_revenue" class="btn btn-success" disabled type="submit" value="Generuj ponownie">
+        </div>
 </form>
 <form id="form_new" class="form-horizontal" method="post" onsubmit="game_request(event, 'form_new', '{% url 'api-init-round' %}')">
     <input type="hidden" name="gameId" value="{{ game_id }}">
-    <input type="submit" value="Nowa runda"> 
+    <div class="col-6 float-right" style="margin-left: -38px">
+    <input class="btn btn-warning" type="submit" value="Nowa runda">
+    </div>
+    </div>
 </form>

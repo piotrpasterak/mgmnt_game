@@ -1,28 +1,14 @@
 {% load api_filters %}
 
-<table>
+<table class="table table-bordered table-striped">
     <tr>
-        <th>
-            &nbsp;
-        </th>
-        <th>
-            Koszt
-        </th>
-        <th>
-            Zysk
-        </th>
-        <th>
-            Zwrot
-        </th>
-        <th>
-            Ryzyko
-        </th>
-        <th>
-            &nbsp;
-        </th>
-        <th>
-            Wynik
-        </th>
+        <th>&nbsp;</th>
+        <th>Koszt</th>
+        <th>Zysk</th>
+        <th>Zwrot</th>
+        <th>Ryzyko</th>
+        <th>&nbsp;</th>
+        <th>Wynik</th>
     </tr>
     {% for itr in round_iterator %}
         <tr>
@@ -43,8 +29,9 @@
             </td>
             <td>
                 <label>
-                    <input type="checkbox" name="project{{ forloop.counter0 }}"
-                        value={{ forloop.counter0 }}{% if checkboxes %} {{ checkboxes|get_at_index:forloop.counter0 }}{% endif %}>
+                    <input type="checkbox" onchange="check_project_amount()" name="fields[]" id="project{{ forloop.counter0 }}"
+                           value={{ forloop.counter0 }}{% if checkboxes %}
+                               {{ checkboxes|get_at_index:forloop.counter0 }}{% endif %}>
                     P{{ forloop.counter }}
                 </label>
             </td>
