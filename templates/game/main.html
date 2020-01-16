@@ -67,15 +67,15 @@
 
             // Callback handler that will be called on success
             request.done(function (response, textStatus, jqXHR) {
-                console.log(response);
+                //console.log(response);
                 $('#game-main').html(response);
             });
 
             // Callback handler that will be called on failure
             request.fail(function (jqXHR, textStatus, errorThrown) {
-                console.log(jqXHR);
-                console.log(textStatus);
-                console.log(errorThrown);
+                //console.log(jqXHR);
+                //console.log(textStatus);
+                //console.log(errorThrown);
                 $('#game-main').html(errorThrown);
             });
 
@@ -99,8 +99,9 @@
             $("#generate_revenue").prop('disabled', amount_of_checked < lower_limit || amount_of_checked > upper_limit);
         }
 
-        function load_project_graph(project_id) {
+        function load_project_graph(event, project_id) {
             let request;
+            event.preventDefault();
 
             // Abort any pending request
             if (request) {
@@ -129,16 +130,16 @@
 
             // Callback handler that will be called on success
             request.done(function (response, textStatus, jqXHR) {
-                console.log(response);
+                //console.log(response);
                 modal.style.display = "block";
                 $('#modal_content').html(response);
             });
 
             // Callback handler that will be called on failure
             request.fail(function (jqXHR, textStatus, errorThrown) {
-                console.log(jqXHR);
-                console.log(textStatus);
-                console.log(errorThrown);
+                //console.log(jqXHR);
+                //console.log(textStatus);
+                //console.log(errorThrown);
                 modal.style.display = "block";
                 $('#modal_content').html(errorThrown);
             });
@@ -146,8 +147,7 @@
             // Callback handler that will be called regardless
             // if the request failed or succeeded
             request.always(function () {
-                // Reenable the inputs
-                inputs.prop("disabled", false);
+
             });
 
 
