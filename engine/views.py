@@ -14,20 +14,27 @@ class PostTemplateView(TemplateView):
         return HttpResponseBadRequest('Bad GET request!')
 
     def post(self, request, *args, **kwargs):
+        self.map_variables(request)
+        
+        context = self.get_context_data()
+        rendered = self.render_to_response(context)
+        return rendered
+
+    def map_variables(self, request):
         p = dict(request.POST)
+
         prohibited_keys = []
-        if 'checkbox_name' in self.__dict__.keys():
+        if hasattr(self, 'checkbox_name'):
             prohibited_keys.append(self.checkbox_name)
+
         for key in p.keys():
             if type(p[key]) is list:
                 if key in prohibited_keys:
                     continue
                 p[key] = p[key][0]
-        self.post = p
 
-        context = self.get_context_data()
-        rendered = self.render_to_response(context)
-        return rendered
+        self.post = p
+        return p
 
 
 class InitGame(PostTemplateView):
