@@ -105,6 +105,9 @@ class Baza(object):
     alfa = 5
     beta = 5
 
+    k = 3 # liczba elemntów najmniejszego podzbioru(>0)
+    m = 3 # liczba elemntów największego podzbioru ( =< liczba projektów)
+
     def __init__(self):
         super(Baza, self).__init__()
 
@@ -150,6 +153,9 @@ class Runda(Baza):
         wynik['zyski'] = list(map(int, list(self.zyski)))
         wynik['zwrot'] = list(map(float, list(self.zwrot)))
         wynik['ryzyko'] = list(map(float, list(self.ryzyko)))
+
+        wynik['k'] = self.k
+        wynik['m'] = self.m
         return wynik
 
     def rozpakuj_dane(self, dane):

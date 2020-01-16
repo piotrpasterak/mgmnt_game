@@ -29,9 +29,10 @@
             </td>
             <td>
                 <label>
-                    <input type="checkbox" onchange="check_project_amount()" name="fields[]" id="project{{ forloop.counter0 }}"
-                           value={{ forloop.counter0 }}{% if checkboxes %}
-                               {{ checkboxes|get_at_index:forloop.counter0 }}{% endif %}>
+                    <input type="checkbox"
+                            onchange="check_project_amount({{ round_data.k }}, {{ round_data.m }})"
+                            name="fields[]" id="project{{ forloop.counter0 }}"
+                            value={{ forloop.counter0 }}{% if checkboxes %}{{ checkboxes|get_at_index:forloop.counter0 }}{% endif %}>
                     P{{ forloop.counter }}
                 </label>
             </td>

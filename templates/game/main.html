@@ -80,10 +80,8 @@
         }
 
 
-        function check_project_amount() {
+        function check_project_amount(lower_limit, upper_limit) {
             let amount_of_checked = 0;
-            let lower_limit = 1;
-            let upper_limit = 3;
             $("[name='fields[]']").each(function () {
                 if (this.checked) {
                     amount_of_checked++;

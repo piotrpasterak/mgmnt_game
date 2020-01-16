@@ -17,6 +17,8 @@ class PostTemplateView(TemplateView):
         p = dict(request.POST)
         for key in p.keys():
             if type(p[key]) is list:
+                if key.startswith("fields"):
+                    continue
                 p[key] = p[key][0]
         self.post = p
 
@@ -65,8 +67,8 @@ class RoundSubmit(PostTemplateView):
     def add_checkboxes_to_context(self, context):
         checkboxes = []
         for itr in range(context['round_data']['projekty']):
-            name = 'project' + str(itr)
-            if name in self.post:
+            name = str(itr)
+            if name in self.post['fields[]']:
                 checkboxes.append(" checked")
             else:
                 checkboxes.append(" ")
