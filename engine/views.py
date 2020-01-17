@@ -6,7 +6,7 @@ from django.http import HttpResponseBadRequest, JsonResponse
 from django.views.generic import TemplateView
 
 from process.models import Round, Game
-from .tools.game_engine import GameEngine, RoundEngine
+from .tools.game_engine import GameEngine, RoundEngine, StepEngine
 
 class PostTemplateView(TemplateView):
 
@@ -15,7 +15,7 @@ class PostTemplateView(TemplateView):
 
     def post(self, request, *args, **kwargs):
         self.map_variables(request)
-        
+
         context = self.get_context_data()
         rendered = self.render_to_response(context)
         return rendered
@@ -65,11 +65,12 @@ class RoundSubmit(PostTemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        rd = Round.objects.get(pk=self.post['roundId'])
-        context['round'] = rd
-        context['round_data'] = loads(rd.possibilities)
+        se = StepEngine(self.post['roundId'])
+
+        context['round'] = se.ro
+        context['round_data'] = loads(se.ro.possibilities)
         context['round_iterator'] = list(range(context['round_data']['projekty']))
-        context['game_id'] = rd.game_id
+        context['game_id'] = se.ro.game_id
 
         self.add_checkboxes_to_context(context)
 

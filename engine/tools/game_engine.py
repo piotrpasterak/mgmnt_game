@@ -1,3 +1,5 @@
+# -*- coding: UTF-8 -*-
+
 from json import loads, dumps
 from random import randint
 
@@ -5,7 +7,7 @@ from django.conf import settings
 
 from process.models import Game, Round, Step
 
-from .portfolio import Runda
+from .portfolio import Runda, Krok
 
 class GameEngine(object):
 
@@ -47,3 +49,39 @@ class RoundEngine(object):
         new_round.save()
         return new_round
         
+
+class StepEngine(object):
+
+    ro = "" # "round" jest zarezerwowane
+    step = ""
+    seed = 0
+
+    def __init__(self, round_id):
+        super(StepEngine, self).__init__()
+        self.ro = Round.objects.get(pk=round_id)
+        self.init_step()
+        return
+
+    def init_step(self):
+        seed = randint(0, settings.MAX_SEED)
+        self.seed = seed
+
+        # initializing objects
+        runda = Runda(self.ro.seed)
+        runda.rozpakuj_dane(self.ro.possibilities)
+
+        krok = Krok(runda, seed)
+        self.step = krok
+
+        # saving to database
+        self.save_step()
+        return
+
+    def save_step(self):
+        step = Step()
+        step.parent_round = self.ro
+        step.seed = self.seed
+        step.player_choice = ""
+        step.real_values = dumps(list(map(int, self.step.sprz_rz)))
+        step.save()
+
