@@ -45,14 +45,21 @@ class InitGame(PostTemplateView):
         context = super().get_context_data(**kwargs)
 
         ge = GameEngine()
-        context['game'] = ge.init_game(self.request.user)
-        context['game_id'] = context['game'].id
+        g =ge.init_game(self.request.user)
+        context['game'] = g
+        context['game_id'] = g.id
 
-        re = RoundEngine(context['game'])
+        re = RoundEngine(g)
         r = re.init_round()
         context['round'] = r
+        context['round_id'] = r.id
         context['round_data'] = loads(r.possibilities)
         context['round_iterator'] = list(range(context['round_data']['projekty']))
+
+        se = StepEngine(r)
+        s = se.blank_step()
+        context['step'] = s
+        context['step_id'] = s.id
 
         return context
 
@@ -66,11 +73,22 @@ class RoundSubmit(PostTemplateView):
         context = super().get_context_data(**kwargs)
 
         se = StepEngine(self.post['roundId'])
+        se.fill_step(self.post['stepId'], self.post[self.checkbox_name])
 
+        context['game_id'] = se.ro.game_id
         context['round'] = se.ro
+        context['round_id'] = se.ro.id
         context['round_data'] = loads(se.ro.possibilities)
         context['round_iterator'] = list(range(context['round_data']['projekty']))
-        context['game_id'] = se.ro.game_id
+        context['sprz_rz'] = list(map(int, list(se.krok.sprz_rz)))
+
+        # new step begin
+
+        se = StepEngine(se.ro)
+        s = se.blank_step()
+        context['step'] = s
+        context['step_id'] = s.id
+        
 
         self.add_checkboxes_to_context(context)
 
@@ -109,7 +127,13 @@ class InitRound(PostTemplateView):
         context['round_data'] = loads(r.possibilities)
         context['round_iterator'] = list(range(context['round_data']['projekty']))
 
+        se = StepEngine(r)
+        s = se.blank_step()
+        context['step'] = s
+        context['step_id'] = s.id
+
         return context
+
 
 class ProjectView(PostTemplateView):
     # this class creates single project plot
@@ -118,6 +142,7 @@ class ProjectView(PostTemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return context
+
 
 class WalletAnalysisView(PostTemplateView):
     # this class is plotting wallet analysis

@@ -1,11 +1,12 @@
 {% load api_filters %}
 
 <form id="form_repeat" class="form-horizontal" method="post" onsubmit="game_request(event, 'form_repeat', '{% url 'api-submit-round' %}')">
-    <input type="hidden" name="roundSeed" value="{{ round.seed }}">
-    <input type="hidden" name="roundId" value="{{ round.id }}">
     <input type="hidden" name="gameId" value="{{ game_id }}">
+    <input type="hidden" name="roundId" value="{{ round_id }}">
+    <input type="hidden" name="roundSeed" value="{{ round.seed }}">
+    <input type="hidden" name="stepId" value="{{ step_id }}">
     {% csrf_token %}
-    {% game_table round_data round_iterator checkboxes %}
+    {% game_table round_data round_iterator checkboxes  sprz_rz %}
     <div class="row">
         <div class="col-6">
     <input id="generate_revenue" class="btn btn-success" disabled type="submit" value="Generuj ponownie">

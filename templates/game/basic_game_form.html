@@ -37,7 +37,8 @@
                 </label>
             </td>
             <td>
-                ---
+                {% if sprz_rz %}{{ sprz_rz|get_at_index:forloop.counter0 }}
+                {% else %} --- {% endif %}
             </td>
         </tr>
     {% endfor %}

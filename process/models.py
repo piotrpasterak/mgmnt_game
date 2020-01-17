@@ -2,6 +2,7 @@ from datetime import datetime
 
 from django.conf import settings
 from django.db import models
+from django.utils import timezone
 
 # Create your models here.
 
@@ -31,7 +32,7 @@ class Round(models.Model):
         return "round (%s) [%s, game (%s)]" % (str(self.seed), str(self.game.user), str(self.game.start_date))
 
     def calculate_total_time(self):
-        n = datetime.now()
+        n = timezone.now()
         delta = n - self.start_date
         self.total_time = delta.total_seconds()
         return self.total_time
@@ -67,9 +68,10 @@ class Step(models.Model):
         return "step (%s) [%s, game (%s), round (%s)]" % values
 
     def calculate_total_time(self):
-        n = datetime.now()
+        n = timezone.now()
         delta = n - self.start_date
-        return delta.total_seconds()
+        self.total_time = delta.total_seconds()
+        return self.total_time
 
     def save(self, *args, **kwargs):
         if self.start_date:

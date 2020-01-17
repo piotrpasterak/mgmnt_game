@@ -186,9 +186,6 @@ class Krok(Baza):
         self.c = self.r2.beta(self.alfa, self.beta, self.projekty)
         self.sprz_rz = np.round((self.c*(self.runda.b-self.runda.a)+self.runda.a),0).astype(int)
         self.zysk_rz = (self.sprz_rz - self.runda.koszty)
-        print(self.c)
-        print(self.sprz_rz)
-        print(self.zysk_rz)
         return
 
 
