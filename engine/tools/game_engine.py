@@ -12,7 +12,7 @@ from .portfolio import Runda, Krok
 class GameEngine(object):
 
     def __init__(self):
-        super(GameEngine, self).__init__()
+        super().__init__()
         return
 
     def init_game(self, user):
@@ -20,13 +20,14 @@ class GameEngine(object):
         new_game.user = user
         new_game.save()
         return new_game
-    
+
+
 class RoundEngine(object):
 
     game = ""
 
     def __init__(self, game_id):
-        super(RoundEngine, self).__init__()
+        super().__init__()
         
         # finding and applying Game object
         if type(game_id) is int:
@@ -59,7 +60,7 @@ class StepEngine(object):
     seed = 0
 
     def __init__(self, round_id):
-        super(StepEngine, self).__init__()
+        super().__init__()
 
         # finding and applying Round object
         if type(round_id) is int:
@@ -128,3 +129,46 @@ class StepEngine(object):
         self.step = step
         return step
 
+
+class WalletCalculationsEngine(object):
+
+    runda = ""
+    ro = ""
+
+    def __init__(self, round_id):
+        super().__init__()
+
+        # finding and applying Round object
+        if type(round_id) is int:
+            # expecting Round object ID
+            self.ro = Round.objects.get(pk=round_id)
+        if type(round_id) is str:
+            # expecting Round object ID as string
+            self.ro = Round.objects.get(pk=int(round_id))
+        else:
+            # expecting Round object directly
+            self.ro = round_id
+
+        # initializing objects
+        runda = Runda(self.ro.seed)
+        runda.rozpakuj_dane(self.ro.possibilities)
+        self.runda = runda
+
+        return
+
+    def calculate_risk(self, projects_list):
+        result = {}
+        cost = 0
+        for pr in projects_list:
+            cost += self.runda.koszty[pr]
+        result['cost'] = cost
+
+        expected_profit = 0
+        for pr in projects_list:
+            expected_profit += self.runda.zyski[pr]
+        result['expected_profit'] = expected_profit
+
+        return result
+
+
+        

@@ -25,6 +25,7 @@
             =
         </td>
         <td>
+            {{ cost }}
         </td>
         <td>
             Koszt
@@ -33,7 +34,7 @@
             =
         </td>
         <td>
-            
+            {% if real_profit %}{{ cost }}{% endif %}
         </td>
     </tr>
     <tr>
@@ -44,6 +45,7 @@
             =
         </td>
         <td>
+            {{ expected_profit }}
         </td>
         <td>
             Zysk
@@ -52,7 +54,7 @@
             =
         </td>
         <td>
-            
+            {% if real_profit %}{{ real_profit }}{% endif %}
         </td>
     </tr>
     <tr>
@@ -71,7 +73,7 @@
             =
         </td>
         <td>
-            
+            {% if real_profit %}{{ risk }}{% endif %}
         </td>
     </tr>
 </table>

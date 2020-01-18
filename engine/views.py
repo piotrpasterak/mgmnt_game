@@ -6,7 +6,8 @@ from django.http import HttpResponseBadRequest, JsonResponse
 from django.views.generic import TemplateView
 
 from process.models import Round, Game
-from .tools.game_engine import GameEngine, RoundEngine, StepEngine
+from .tools.game_engine import GameEngine, RoundEngine,\
+        StepEngine, WalletCalculationsEngine
 
 class PostTemplateView(TemplateView):
 
@@ -145,11 +146,15 @@ class WalletCalculations(PostTemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         print(self.post)
-        print(context)
         projects = [int(x)+1 for x in self.post[self.projects_list]]
         context['projects'] = projects
 
-        
+        print(self.post['round_id'])
+        wc = WalletCalculationsEngine(self.post['round_id'])
+        data = wc.calculate_risk(projects)
+        print(data)
+        for key in data.keys():
+            context[key] = data[key]
 
         return context
 
