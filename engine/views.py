@@ -1,4 +1,4 @@
-# -*- coding: UTF-8 -*-
+
 
 from json import loads
 
@@ -80,7 +80,7 @@ class RoundSubmit(PostTemplateView):
         context['round_id'] = se.ro.id
         context['round_data'] = loads(se.ro.possibilities)
         context['round_iterator'] = list(range(context['round_data']['projekty']))
-        context['sprz_rz'] = list(map(int, list(se.krok.sprz_rz)))
+        context['wyniki'] = list(map(int, list(se.krok.zysk_rz)))
 
         # new step begin
 
@@ -133,6 +133,14 @@ class InitRound(PostTemplateView):
         context['step'] = s
         context['step_id'] = s.id
 
+        return context
+
+
+class WalletCalculations(PostTemplateView):
+    template_name = "game/wallet.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
         return context
 
 
