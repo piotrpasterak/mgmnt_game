@@ -151,6 +151,7 @@ class WalletCalculationsEngine(object):
 
         if step_id is not None:
             self.step = find_object(Step, step_id)
+            self.krok = Krok(self.runda, self.step.seed)
 
         return
 
@@ -172,6 +173,14 @@ class WalletCalculationsEngine(object):
         # result['risk']
         risk = self.runda.oszacuj_ryzyko(projects_list)
         result['risk'] = "%.2f" % risk
+
+        if self.krok != "":
+            real_profit = 0
+            for pr in projects_list:
+                real_profit += self.krok.zysk_rz[pr]
+            result['real_profit'] = real_profit
+            real_return = real_profit / cost
+            result['real_return'] = "%.2f" % real_return
 
         return result
 
