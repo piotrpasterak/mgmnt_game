@@ -245,7 +245,7 @@
             // Fire off the request to backend
             request = $.ajax({
                 headers: {'X-CSRFToken': $("[name=csrfmiddlewaretoken]").val()},
-                url: "{% url 'api-show-wallet' %}",
+                url: "{% url 'api-calculate-wallet' %}",
                 type: "post",
                 data: formData,
                 dataType: 'html',

@@ -10,4 +10,5 @@ urlpatterns = [
     path('submit/', RoundSubmit.as_view(), name='api-submit-round'),
     path('project/', ProjectView.as_view(), name='api-show-project'),
     path('wallet/', WalletAnalysisView.as_view(), name='api-show-wallet'),
+    path('calculations/', WalletCalculations.as_view(), name='api-calculate-wallet'),
 ]
