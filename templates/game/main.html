@@ -226,8 +226,9 @@
 
         }
 
-        function estimate_risk() {
+        function estimate_risk(event) {
             let projects = [];
+            event.preventDefault();
 
             $("[name='fields[]']").each(function () {
                 if (this.checked) {

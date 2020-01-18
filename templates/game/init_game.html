@@ -7,7 +7,7 @@
     <input type="hidden" name="stepId" value="{{ step_id }}">
     {% csrf_token %}
     {% game_table round_data round_iterator %}
+    <div id="risk" style="margin-bottom: 15px;"></div>
     <input id="generate_revenue" class="btn btn-success" disabled type="submit" value="Generuj zyski!">
 </form>
 <button style="margin-top: 15px" id="estimate_risk" disabled onclick="estimate_risk(event)" class="btn btn-danger" value="Oszacuj Ryzyko!">Oszacuj Ryzyko!</button>
-<div id="risk"></div>

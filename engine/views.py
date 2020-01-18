@@ -145,11 +145,12 @@ class WalletCalculations(PostTemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        projects = [int(x)+1 for x in self.post[self.projects_list]]
+        projects0 = [int(x) for x in self.post[self.projects_list]] # list of chosen projects, origin 0
+        projects = [int(x)+1 for x in self.post[self.projects_list]] # list of chosen projects, origin 1
         context['projects'] = projects
 
         wc = WalletCalculationsEngine(self.post['round_id'])
-        data = wc.calculate_values(projects)
+        data = wc.calculate_values(projects0)
         for key in data.keys():
             context[key] = data[key]
 

@@ -7,6 +7,7 @@
     <input type="hidden" name="stepId" value="{{ step_id }}">
     {% csrf_token %}
     {% game_table round_data round_iterator checkboxes  results %}
+    <div id="risk" style="margin-bottom: 15px;"></div>
     <div class="row">
         <div class="col-6">
     <input id="generate_revenue" class="btn btn-success" onclick="animateValue('result', 100, 25, 5000);" disabled type="submit" value="Generuj ponownie">
@@ -20,7 +21,6 @@
     </div>
 </form>
 <button style="margin-top: 15px" id="estimate_risk" disabled onclick="estimate_risk(event)" class="btn btn-danger" value="Oszacuj Ryzyko!">Oszacuj Ryzyko!</button>
-<div id="risk"></div>
 <script type="text/javascript">
     check_project_amount({{ round_data.k }}, {{ round_data.m }});
 </script>
