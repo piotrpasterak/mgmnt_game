@@ -37,8 +37,8 @@
                 </label>
             </td>
             <td>
-                {% if sprz_rz %}
-                    <div name="result">{{ sprz_rz|get_at_index:forloop.counter0 }}</div>
+                {% if results %}
+                    <div name="result">{{ results|get_at_index:forloop.counter0 }}</div>
                 {% else %} --- {% endif %}
             </td>
         </tr>
