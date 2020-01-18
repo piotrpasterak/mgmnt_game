@@ -168,11 +168,12 @@ class WalletCalculationsEngine(object):
             expected_profit += self.runda.zyski[pr-1]
         result['expected_profit'] = expected_profit
         expected_return = expected_profit / cost
-        result['expected_return'] = "%.2f" % (expected_return)
+        result['expected_return'] = "%.2f" % expected_return
 
         # RYzypor = np.round(np.average(self.runda.b, weights=self.runda.a), 2)
         # result['risk']
-        result['risk'] = self.runda.oszacuj_ryzyko(projects_list)
+        risk = self.runda.oszacuj_ryzyko(projects_list)
+        result['risk'] = "%.2f" % risk
 
         return result
 

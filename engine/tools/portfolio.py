@@ -174,6 +174,15 @@ class Runda(Baza):
         self.ryzyko = np.array(dane['ryzyko'])
         return
 
+    def oszacuj_ryzyko(self, lista_projektow):
+        ryzyka = []
+        koszty = []
+        for numer in lista_projektow:
+            ryzyka.append(self.ryzyko[numer])
+            koszty.append(self.koszty[numer])
+        ryzyko = np.average(ryzyka, weights=koszty)
+        return ryzyko
+
 
 class Krok(Baza):
 
