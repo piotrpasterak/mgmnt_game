@@ -26,6 +26,8 @@ class PostTemplateView(TemplateView):
         prohibited_keys = []
         if hasattr(self, 'checkbox_name'):
             prohibited_keys.append(self.checkbox_name)
+        if hasattr(self, 'projects_list'):
+            prohibited_keys.append(self.projects_list)
 
         for key in p.keys():
             if type(p[key]) is list:
@@ -54,7 +56,7 @@ class InitGame(PostTemplateView):
         context['round'] = r
         context['round_id'] = r.id
         context['round_data'] = loads(r.possibilities)
-        context['round_iterator'] = list(range(context['round_data']['projekty']))
+        context['round_iterator'] = list(range(1, context['round_data']['projekty']+1))
 
         se = StepEngine(r)
         s = se.blank_step()
@@ -79,7 +81,7 @@ class RoundSubmit(PostTemplateView):
         context['round'] = se.ro
         context['round_id'] = se.ro.id
         context['round_data'] = loads(se.ro.possibilities)
-        context['round_iterator'] = list(range(context['round_data']['projekty']))
+        context['round_iterator'] = list(range(1, context['round_data']['projekty']+1))
         context['results'] = list(map(int, list(se.krok.zysk_rz)))
 
         # new step begin
@@ -126,7 +128,7 @@ class InitRound(PostTemplateView):
         context['round'] = r
         context['round_id'] = r.id
         context['round_data'] = loads(r.possibilities)
-        context['round_iterator'] = list(range(context['round_data']['projekty']))
+        context['round_iterator'] = list(range(1, context['round_data']['projekty']+1))
 
         se = StepEngine(r)
         s = se.blank_step()
@@ -138,9 +140,17 @@ class InitRound(PostTemplateView):
 
 class WalletCalculations(PostTemplateView):
     template_name = "game/wallet.html"
+    projects_list = "chosen_projects[]"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        print(self.post)
+        print(context)
+        projects = [int(x)+1 for x in self.post[self.projects_list]]
+        context['projects'] = projects
+
+        
+
         return context
 
 
