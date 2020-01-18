@@ -31,13 +31,14 @@
                 <label>
                     <input type="checkbox"
                             onchange="check_project_amount({{ round_data.k }}, {{ round_data.m }})"
-                            name="fields[]" id="project{{ forloop.counter0 }}"
+                            name="fields[]" id="{{ forloop.counter0 }}"
                             value={{ forloop.counter0 }}{% if checkboxes %}{{ checkboxes|get_at_index:forloop.counter0 }}{% endif %}>
                     P{{ forloop.counter }}
                 </label>
             </td>
             <td>
-                {% if results %}{{ results|get_at_index:forloop.counter0 }}
+                {% if sprz_rz %}
+                    <div name="result">{{ sprz_rz|get_at_index:forloop.counter0 }}</div>
                 {% else %} --- {% endif %}
             </td>
         </tr>

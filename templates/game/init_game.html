@@ -8,4 +8,6 @@
     {% csrf_token %}
     {% game_table round_data round_iterator %}
     <input id="generate_revenue" class="btn btn-success" disabled type="submit" value="Generuj zyski!">
+    <button id="estimate_risk" onclick="estimate_risk()" class="btn btn-danger" value="Oszacuj Ryzyko!">Oszacuj Ryzyko!</button>
+<div id="risk"></div>
 </form>

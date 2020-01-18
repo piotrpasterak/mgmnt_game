@@ -82,7 +82,7 @@
             // Callback handler that will be called regardless
             // if the request failed or succeeded
             request.always(function () {
-
+                animateValue(document.getElementById('result'));
             });
 
 
@@ -172,7 +172,104 @@
                     modal.style.display = "none";
                 }
             }
+
+
         });
+
+        function animateValue(obj_name, start = 0, end = null, duration = 3000) {
+
+            let boxesEL = document.getElementsByName(obj_name);
+            for (let x = 0; x < boxesEL.length; x++)   // comparison should be "<" not "<="
+            {
+                let obj = boxesEL[x];
+                if (obj) {
+
+                    // save starting text for later (and as a fallback text if JS not running and/or google)
+                    let textStarting = obj.innerHTML;
+
+                    // remove non-numeric from starting text if not specified
+                    end = end || parseInt(textStarting.replace(/\D/g, ""));
+
+                    let range = end - start;
+
+                    // no timer shorter than 50ms (not really visible any way)
+                    let minTimer = 50;
+
+                    // calc step time to show all interediate values
+                    let stepTime = Math.abs(Math.floor(duration / range));
+
+                    // never go below minTimer
+                    stepTime = Math.max(stepTime, minTimer);
+
+                    // get current time and calculate desired end time
+                    let startTime = new Date().getTime();
+                    let endTime = startTime + duration;
+                    let timer;
+
+                    function run() {
+                        let now = new Date().getTime();
+                        let remaining = Math.max((endTime - now) / duration, 0);
+                        let value = Math.round(end - (remaining * range));
+                        // replace numeric digits only in the original string
+                        obj.innerHTML = textStarting.replace(/([0-9]+)/g, value);
+                        if (value == end) {
+                            clearInterval(timer);
+                        }
+                    }
+
+                    timer = setInterval(run, stepTime);
+                    run();
+                }
+            }
+
+
+        }
+
+        function estimate_risk() {
+            let projects = [];
+
+            $("[name='fields[]']").each(function () {
+                if (this.checked) {
+                    projects.push(this.id);
+                }
+            });
+
+
+            //Define Data to be sent
+            let formData = {
+                'round_id': $("[name='roundId']").val(),
+                'chosen_projects': projects
+            };
+
+
+            // Fire off the request to backend
+            request = $.ajax({
+                headers: {'X-CSRFToken': $("[name=csrfmiddlewaretoken]").val()},
+                url: "{% url 'api-show-wallet' %}",
+                type: "post",
+                data: formData,
+                dataType: 'html',
+                encode: true
+            });
+
+
+            // Callback handler that will be called on success
+            request.done(function (response, textStatus, jqXHR) {
+                $('#risk').html(response);
+            });
+
+            // Callback handler that will be called on failure
+            request.fail(function (jqXHR, textStatus, errorThrown) {
+                $('#risk').html(errorThrown);
+            });
+
+            // Callback handler that will be called regardless
+            // if the request failed or succeeded
+            request.always(function () {
+
+            });
+
+        }
 
     </script>
 {% endblock %}
