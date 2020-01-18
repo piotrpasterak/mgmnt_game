@@ -29,7 +29,8 @@ class Round(models.Model):
     possibilities = models.TextField(blank=True, null=True)
 
     def __str__(self):
-        return "round (%s) [%s, game (%s)]" % (str(self.seed), str(self.game.user), str(self.game.start_date))
+        datestring = self.start_date.strftime("%Y-%m-%d %H:%M:%S")
+        return "%s: round %s" % (str(self.game.user), datestring)
 
     def calculate_total_time(self):
         n = timezone.now()

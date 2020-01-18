@@ -124,6 +124,7 @@ class InitRound(PostTemplateView):
         re = RoundEngine(context['game'])
         r = re.init_round()
         context['round'] = r
+        context['round_id'] = r.id
         context['round_data'] = loads(r.possibilities)
         context['round_iterator'] = list(range(context['round_data']['projekty']))
 
