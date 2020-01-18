@@ -30,7 +30,7 @@ class Round(models.Model):
 
     def __str__(self):
         datestring = self.start_date.strftime("%Y-%m-%d %H:%M:%S")
-        return "%s: round %s" % (str(self.game.user), datestring)
+        return "%s, %s: round %s" % (str(self.game.user), datestring, self.seed)
 
     def calculate_total_time(self):
         n = timezone.now()
@@ -64,9 +64,13 @@ class Step(models.Model):
     real_return = models.FloatField(blank=True, null=True)
 
     def __str__(self):
-        values = (str(self.seed), str(self.parent_round.game.user),
-            str(self.parent_round.game.start_date), str(self.parent_round.seed))
-        return "step (%s) [%s, game (%s), round (%s)]" % values
+        datestring = self.start_date.strftime("%Y-%m-%d %H:%M:%S")
+        seed = self.seed
+        if seed is None:
+            seed = "(blank)"
+        values = (str(self.parent_round.game.user), datestring,
+            self.parent_round.seed, seed)
+        return "%s, %s: step %s, round %s" % values
 
     def calculate_total_time(self):
         n = timezone.now()
