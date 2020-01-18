@@ -97,6 +97,7 @@
                 }
             });
             $("#generate_revenue").prop('disabled', amount_of_checked < lower_limit || amount_of_checked > upper_limit);
+            $("#estimate_risk").prop('disabled', amount_of_checked < 1 );
         }
 
         function load_project_graph(event, project_id) {
