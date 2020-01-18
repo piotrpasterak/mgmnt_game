@@ -72,15 +72,7 @@ class StepEngine(object):
         super().__init__()
 
         # finding and applying Round object
-        if type(round_id) is int:
-            # expecting Round object ID
-            self.ro = Round.objects.get(pk=round_id)
-        elif type(round_id) is str:
-            # expecting Round object ID as string
-            self.ro = Round.objects.get(pk=int(round_id))
-        else:
-            # expecting Round object directly
-            self.ro = round_id
+        self.ro = find_object(Round, round_id)
         return
 
     def blank_step(self):
@@ -150,15 +142,7 @@ class WalletCalculationsEngine(object):
         super().__init__()
 
         # finding and applying Round object
-        if type(round_id) is int:
-            # expecting Round object ID
-            self.ro = Round.objects.get(pk=round_id)
-        elif type(round_id) is str:
-            # expecting Round object ID as string
-            self.ro = Round.objects.get(pk=int(round_id))
-        else:
-            # expecting Round object directly
-            self.ro = round_id
+        self.ro = find_object(Round, round_id)
 
         # initializing objects
         runda = Runda(self.ro.seed)
@@ -166,13 +150,7 @@ class WalletCalculationsEngine(object):
         self.runda = runda
 
         if step_id is not None:
-            if type(step_id) is int:
-                self.step = Step.objects.get(pk=step_id)
-            elif type(step_id) is str:
-                self.step = Step.objects.get(pk=int(step_id))
-            else:
-                self.step = step_id
-
+            self.step = find_object(Step, step_id)
 
         return
 
