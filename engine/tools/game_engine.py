@@ -159,12 +159,12 @@ class WalletCalculationsEngine(object):
         result = {}
         cost = 0
         for pr in projects_list:
-            cost += self.runda.koszty[pr-1]
+            cost += self.runda.koszty[pr]
         result['cost'] = cost
 
         expected_profit = 0
         for pr in projects_list:
-            expected_profit += self.runda.zyski[pr-1]
+            expected_profit += self.runda.zyski[pr]
         result['expected_profit'] = expected_profit
         expected_return = expected_profit / cost
         result['expected_return'] = "%.2f" % expected_return
@@ -176,8 +176,9 @@ class WalletCalculationsEngine(object):
 
         if self.krok != "":
             real_profit = 0
+            profits = list(map(int, self.krok.zysk_rz))
             for pr in projects_list:
-                real_profit += self.krok.zysk_rz[pr]
+                real_profit += profits[pr]
             result['real_profit'] = real_profit
             real_return = real_profit / cost
             result['real_return'] = "%.2f" % real_return
