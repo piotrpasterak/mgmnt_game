@@ -6,7 +6,7 @@
     <input type="hidden" name="roundSeed" value="{{ round.seed }}">
     <input type="hidden" name="stepId" value="{{ step_id }}">
     {% csrf_token %}
-    {% game_table round_data round_iterator checkboxes  sprz_rz %}
+    {% game_table round_data round_iterator checkboxes  results %}
     <div class="row">
         <div class="col-6">
     <input id="generate_revenue" class="btn btn-success" disabled type="submit" value="Generuj ponownie">

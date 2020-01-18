@@ -80,7 +80,7 @@ class RoundSubmit(PostTemplateView):
         context['round_id'] = se.ro.id
         context['round_data'] = loads(se.ro.possibilities)
         context['round_iterator'] = list(range(context['round_data']['projekty']))
-        context['wyniki'] = list(map(int, list(se.krok.zysk_rz)))
+        context['results'] = list(map(int, list(se.krok.zysk_rz)))
 
         # new step begin
 
