@@ -49,7 +49,7 @@ class RoundEngine(object):
         new_round.possibilities = dumps(p.spakuj_dane())
         new_round.save()
         return new_round
-        
+
 
 class StepEngine(object):
 
@@ -156,17 +156,23 @@ class WalletCalculationsEngine(object):
 
         return
 
-    def calculate_risk(self, projects_list):
+    def calculate_values(self, projects_list):
         result = {}
         cost = 0
         for pr in projects_list:
-            cost += self.runda.koszty[pr]
+            cost += self.runda.koszty[pr-1]
         result['cost'] = cost
 
         expected_profit = 0
         for pr in projects_list:
-            expected_profit += self.runda.zyski[pr]
+            expected_profit += self.runda.zyski[pr-1]
         result['expected_profit'] = expected_profit
+        expected_return = expected_profit / cost
+        result['expected_return'] = "%.2f" % (expected_return)
+
+        # RYzypor = np.round(np.average(self.runda.b, weights=self.runda.a), 2)
+        # result['risk']
+        result['risk'] = self.runda.oszacuj_ryzyko(projects_list)
 
         return result
 

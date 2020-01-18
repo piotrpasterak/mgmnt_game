@@ -151,7 +151,7 @@ class WalletCalculations(PostTemplateView):
 
         print(self.post['round_id'])
         wc = WalletCalculationsEngine(self.post['round_id'])
-        data = wc.calculate_risk(projects)
+        data = wc.calculate_values(projects)
         print(data)
         for key in data.keys():
             context[key] = data[key]

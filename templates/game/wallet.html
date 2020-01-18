@@ -8,7 +8,7 @@
         </th>
     </tr>
     <tr>
-        <td rowspan="3">
+        <td rowspan="4">
             <strong>
                 {% for number in projects %}
                     Projekt{{ number }}
@@ -59,12 +59,33 @@
     </tr>
     <tr>
         <td>
+            Zwrot
+        </td>
+        <td>
+            =
+        </td>
+        <td>
+            {{ expected_return }}
+        </td>
+        <td>
+            Zwrot
+        </td>
+        <td>
+            =
+        </td>
+        <td>
+            {% if real_profit %}{{ real_return }}{% endif %}
+        </td>
+    </tr>
+    <tr>
+        <td>
             Ryzyko
         </td>
         <td>
             =
         </td>
         <td>
+            {{ risk }}
         </td>
         <td>
             Ryzyko
