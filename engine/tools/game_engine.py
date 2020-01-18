@@ -9,6 +9,21 @@ from process.models import Game, Round, Step
 
 from .portfolio import Runda, Krok
 
+
+def find_object(klass, pk):
+    if type(pk) is klass:
+        # object itself
+        return pk
+    elif type(pk) is int:
+        # object id as integer
+        return klass.objects.get(pk=pk)
+    elif type(pk) is str:
+        # object id as string
+        return klass.objects.get(pk=int(pk))
+    # unknown object, return empty class
+    return klass()
+
+
 class GameEngine(object):
 
     def __init__(self):
@@ -30,13 +45,7 @@ class RoundEngine(object):
         super().__init__()
         
         # finding and applying Game object
-        if type(game_id) is int:
-            # expecting Game object ID
-            self.game = Game.object.get(pk=game_id)
-        else:
-            # expecting Game object directly
-            self.game = game_id
-
+        self.game = find_object(Game, game_id)
         return
 
     def init_round(self):
@@ -66,7 +75,7 @@ class StepEngine(object):
         if type(round_id) is int:
             # expecting Round object ID
             self.ro = Round.objects.get(pk=round_id)
-        if type(round_id) is str:
+        elif type(round_id) is str:
             # expecting Round object ID as string
             self.ro = Round.objects.get(pk=int(round_id))
         else:
@@ -134,15 +143,17 @@ class WalletCalculationsEngine(object):
 
     runda = ""
     ro = ""
+    krok = ""
+    step = ""
 
-    def __init__(self, round_id):
+    def __init__(self, round_id, step_id=None):
         super().__init__()
 
         # finding and applying Round object
         if type(round_id) is int:
             # expecting Round object ID
             self.ro = Round.objects.get(pk=round_id)
-        if type(round_id) is str:
+        elif type(round_id) is str:
             # expecting Round object ID as string
             self.ro = Round.objects.get(pk=int(round_id))
         else:
@@ -153,6 +164,15 @@ class WalletCalculationsEngine(object):
         runda = Runda(self.ro.seed)
         runda.rozpakuj_dane(self.ro.possibilities)
         self.runda = runda
+
+        if step_id is not None:
+            if type(step_id) is int:
+                self.step = Step.objects.get(pk=step_id)
+            elif type(step_id) is str:
+                self.step = Step.objects.get(pk=int(step_id))
+            else:
+                self.step = step_id
+
 
         return
 

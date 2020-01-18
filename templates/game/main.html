@@ -228,7 +228,7 @@
 
         function estimate_risk(event) {
             let projects = [];
-            event.preventDefault();
+            if(event) event.preventDefault();
 
             $("[name='fields[]']").each(function () {
                 if (this.checked) {
@@ -242,6 +242,7 @@
                 'round_id': $("[name='roundId']").val(),
                 'chosen_projects': projects
             };
+            if(!event) formData['step_id'] = $("[name='stepId']").val();
 
 
             // Fire off the request to backend

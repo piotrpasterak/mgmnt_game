@@ -149,7 +149,10 @@ class WalletCalculations(PostTemplateView):
         projects = [int(x)+1 for x in self.post[self.projects_list]] # list of chosen projects, origin 1
         context['projects'] = projects
 
-        wc = WalletCalculationsEngine(self.post['round_id'])
+        step_id = None
+        if 'step_id' in self.post:
+            step_id = self.post['step_id']
+        wc = WalletCalculationsEngine(self.post['round_id'], step_id)
         data = wc.calculate_values(projects0)
         for key in data.keys():
             context[key] = data[key]
