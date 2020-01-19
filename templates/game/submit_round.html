@@ -21,9 +21,7 @@
     </div>
     </div>
 </form>
-<button style="margin-top: 15px" id="estimate_risk" disabled onclick="estimate_risk(event)" class="btn btn-danger" value="Oszacuj Ryzyko!">Oszacuj Ryzyko!</button>
 <script type="text/javascript">
     check_project_amount({{ round_data.k }}, {{ round_data.m }});
     estimate_risk();
-    $("#estimate_risk").prop('disabled', true);
 </script>
