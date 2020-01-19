@@ -97,7 +97,7 @@
             });
             $("#generate_revenue").prop('disabled', amount_of_checked < lower_limit || amount_of_checked > upper_limit);
             if (amount_of_checked > 0) {
-                estimate_risk(event);
+                estimate_risk();
             } else {
                 $('#risk').html('');
             }
@@ -197,7 +197,9 @@
                 'round_id': $("[name='roundId']").val(),
                 'chosen_projects': projects
             };
-            if (!event) formData['step_id'] = $("[name='oldStepId']").val();
+            if (!event){
+                formData['step_id'] = $("[name='oldStepId']").val();
+            }
 
 
             // Fire off the request to backend
