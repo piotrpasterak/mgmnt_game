@@ -1,6 +1,6 @@
 {% load api_filters %}
 
-<form id="form_repeat" class="form-horizontal" method="post" onsubmit="game_request(event, 'form_repeat', '{% url 'api-submit-round' %}')">
+<form id="form_repeat" class="form-horizontal" method="post" onsubmit="game_request_timeout(event, 'form_repeat', '{% url 'api-submit-round' %}')">
     <input type="hidden" name="gameId" value="{{ game_id }}">
     <input type="hidden" name="roundId" value="{{ round_id }}">
     <input type="hidden" name="roundSeed" value="{{ round.seed }}">
@@ -11,7 +11,7 @@
     <div id="risk" style="margin-bottom: 15px;"></div>
     <div class="row">
         <div class="col-6">
-    <input id="generate_revenue" class="btn btn-success" onclick="animateValue('result', 100, 25, 5000);" disabled type="submit" value="Generuj ponownie">
+    <input id="generate_revenue" class="btn btn-success" disabled type="submit" value="Generuj ponownie">
         </div>
 </form>
 <form id="form_new" class="form-horizontal" method="post" onsubmit="game_request(event, 'form_new', '{% url 'api-init-round' %}')">

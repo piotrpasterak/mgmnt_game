@@ -18,7 +18,7 @@
             <td>
                 {{ round_data.koszty|get_at_index:forloop.counter0 }}
             </td>
-            <td>
+            <td id="expectedResults{{ forloop.counter0 }}">
                 {{ round_data.zyski|get_at_index:forloop.counter0 }}
             </td>
             <td>
@@ -36,9 +36,9 @@
                     P{{ forloop.counter }}
                 </label>
             </td>
-            <td>
+            <td id="realResults{{ forloop.counter0 }}">
                 {% if results %}
-                    <div>{{ results|get_at_index:forloop.counter0 }}</div>
+                    {{ results|get_at_index:forloop.counter0 }}
                 {% else %} --- {% endif %}
             </td>
         </tr>

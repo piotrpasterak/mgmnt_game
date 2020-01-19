@@ -1,6 +1,6 @@
 {% load api_filters %}
 
-<form id="form_round" class="form-horizontal" method="post" onsubmit="game_request(event, 'form_round', '{% url 'api-submit-round' %}')">
+<form id="form_round" class="form-horizontal" method="post" onsubmit="game_request_timeout(event, 'form_round', '{% url 'api-submit-round' %}')">
     <input type="hidden" name="gameId" value="{{ game_id }}">
     <input type="hidden" name="roundId" value="{{ round_id }}">
     <input type="hidden" name="roundSeed" value="{{ round.seed }}">
