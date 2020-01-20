@@ -161,7 +161,7 @@ class WalletCalculations(PostTemplateView):
         return context
 
 
-def MapImage(request, **kwargs):
+def WalletImage(request, **kwargs):
     print(kwargs)
     import random
     import django
