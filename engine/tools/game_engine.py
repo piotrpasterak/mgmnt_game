@@ -1,12 +1,14 @@
 # -*- coding: UTF-8 -*-
 
+from itertools import combinations
 from json import loads, dumps
 from random import randint
 
 from django.conf import settings
+from matplotlib import pyplot as plt
+from matplotlib import ticker
 
 from process.models import Game, Round, Step
-
 from .portfolio import Runda, Krok
 
 
@@ -186,4 +188,84 @@ class WalletCalculationsEngine(object):
         return result
 
 
-        
+class ProjectAnalysis(object):
+
+    ro = ""
+    runda = ""
+
+    def __init__(self, round_id):
+        super().__init__()
+
+        # finding and applying Round object
+        self.ro = find_object(Round, round_id)
+
+        # initializing objects
+        runda = Runda(self.ro.seed)
+        runda.rozpakuj_dane(self.ro.possibilities)
+        self.runda = runda
+
+
+class WalletMapAnalysis(object):
+
+    ro = ""
+    runda = ""
+
+    def __init__(self, round_id):
+        super().__init__()
+
+        # finding and applying Round object
+        self.ro = find_object(Round, round_id)
+
+        # initializing objects
+        runda = Runda(self.ro.seed)
+        runda.rozpakuj_dane(self.ro.possibilities)
+        self.runda = runda
+
+    def generate_cases(self):
+        result = []
+        possibilities = list(range(self.runda.projekty))
+        itr = self.runda.k
+        while itr <= self.runda.m:
+            result += combinations(possibilities, itr)
+            itr += 1
+        return result
+
+    def sum_profits(self, projects):
+        result = 0
+        for number in projects:
+            result += self.runda.zyski[number]
+        return result
+
+    def generate_data(self):
+        cases = self.generate_cases()
+        risks = []
+        profits = []
+        for case in cases:
+            profits.append(self.sum_profits(case))
+            risks.append(self.runda.oszacuj_ryzyko(case))
+        return risks, profits
+
+    def plot(self, projects_list):
+        risks, profits = self.generate_data()
+        one_risk = self.runda.oszacuj_ryzyko(projects_list)
+        one_profit = self.sum_profits(projects_list)
+
+        fig, ax = plt.subplots(figsize=(7, 6))
+        ax.scatter(risks, profits,  edgecolor='k', facecolors = 'y', alpha=0.7, s = 50, lw =1)
+        ax.scatter([one_risk], [one_profit],  edgecolor='k', facecolors = 'r', alpha=0.7, s = 50, lw =1)
+
+        plt.rc('grid', linestyle="--", lw=0.3, color='black')
+        ax.grid('on', linestyle='--', lw=.3, c='grey')
+        ax.set_facecolor('whitesmoke')
+        ax.set_ylim(0, 100)
+        y_ticks = [10*x for x in range(11)]
+        plt.yticks(y_ticks)
+        ax.yaxis.set_minor_locator(ticker.MultipleLocator(1))
+        plt.ylabel("zysk z portfela")
+        ax.set_xlim(0, 1)
+        x_ticks = [0.1*x for x in range(11)]
+        plt.xticks(x_ticks)
+        ax.xaxis.set_minor_locator(ticker.MultipleLocator(0.01))
+        plt.xlabel("ryzyko portfela")
+
+        return plt

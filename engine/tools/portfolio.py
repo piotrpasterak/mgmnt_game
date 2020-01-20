@@ -12,34 +12,34 @@ import numpy as np
 
 
 class Projekty():
-    
+
     def __init__(self, runda=1, krok=1):
         self.runda = runda
         self.krok = krok
         self.r1 = np.random.RandomState(self.runda)
         self.r2 = np.random.RandomState(self.krok)
-        
+
         self.projekty = 9
         self.a_min, self.a_max = 5, 20        # a_max<k_min<k_max<s_min
         self.k_min, self.k_max = 20, 31       # koszty
         self.s_min, self.s_max = 31, 40       # sprzedaż
         self.alfa, self.beta = 5, 5
-        
+
         self.a = self.r1.randint(self.a_min, self.a_max, self.projekty)
         self.koszty = self.r1.randint(self.k_min, self.k_max, self.projekty)
         self.sprz = self.r1.randint(self.s_min, self.s_max, self.projekty)
         self.b = 2*self.sprz-self.a
-        
+
         self.zyski = self.sprz-self.koszty
         self.zwrot = np.round((self.zyski/self.koszty), 2)
-        
+
         self.ryzyko = np.round((self.koszty-self.a)/(self.sprz-self.a+2), 2)
-        
+
         self.columns = ['koszt', 'zysk', 'zwrot', 'ryzyko']
         self.index = ['P'+str(p+1) for p in range(self.projekty)]
         self.data = zip(self.koszty, self.zyski, self.zwrot, self.ryzyko)
         self.dane = pd.DataFrame(self.data, columns=self.columns, index = self.index)
-        
+
         self.c = self.r2.beta(self.alfa, self.beta, self.projekty)
         self.sprz_rz = np.round((self.c*(self.b-self.a)+self.a),0).astype(int)
         self.zysk_rz = (self.sprz_rz - self.koszty)
@@ -59,15 +59,15 @@ class Projekty():
         df.columns = [Projekty().index]
         df.insert(loc=0, column='zysk', value=rozrzut)
         return df
-    
+
     def ryzyko1(self):
         d = np.round((self.sprz*0.9),0).astype(int)
         g = np.round((self.sprz*1.1),0).astype(int)
         RYZYKO = []
         for i in range(self.projekty):
-            yd = stats.beta.cdf(d[i], self.alfa, self.beta, 
+            yd = stats.beta.cdf(d[i], self.alfa, self.beta,
                                 loc=self.a[i], scale=self.b[i]-self.a[i])
-            yg = stats.beta.cdf(g[i], self.alfa, self.beta, 
+            yg = stats.beta.cdf(g[i], self.alfa, self.beta,
                                 loc=self.a[i], scale=self.b[i]-self.a[i])
             ryzyko = np.round(yg-yd, 2)
             RYZYKO.append(ryzyko)
@@ -127,7 +127,7 @@ class Runda(Baza):
         self.koszty = self.r1.randint(self.k_min, self.k_max, self.projekty)
         self.sprz = self.r1.randint(self.s_min, self.s_max, self.projekty)
         self.b = 2*self.sprz-self.a
-        
+
         # obliczenia podstawowe
         self.zyski = self.sprz-self.koszty
         self.zwrot = np.round((self.zyski/self.koszty), 2)
@@ -199,10 +199,10 @@ class Krok(Baza):
 
 
 class Portfele(Projekty):
-    
+
     def __init__(self, runda, krok):
         super().__init__(runda, krok)
-    
+
     def liczba(self):
         # generowanie porfeli projektów (k =< m)
         k = 3  # liczba elemntów najmniejszego podzbioru(>0)
@@ -216,7 +216,7 @@ class Portfele(Projekty):
                 for i in itt.combinations(self.index, k):
                     portfele.append(i)
         return portfele
-    
+
     def tabela(self):
         portfele = Portfele(self.runda, self.krok).liczba()
         ID = [] # indeksy portflei
@@ -227,7 +227,7 @@ class Portfele(Projekty):
         WY = [] # zagregowane wyniki rzeczywste portfeli
         for h in range(len(portfele)):
             danepor = self.wyniki.loc[list(portfele[h])]
-            KOszpor = danepor.loc[:, 'koszt'].sum() 
+            KOszpor = danepor.loc[:, 'koszt'].sum()
             ZYskpor = danepor.loc[:, 'zysk'].sum()
             a = danepor.loc[:, 'koszt']
             b = danepor.loc[:, 'ryzyko']
@@ -250,16 +250,16 @@ class Portfele(Projekty):
 
 
 class Wykresy(Projekty):
-    
+
     def __init__(self, runda, krok):
         super().__init__(runda, krok)
         self.gran_ryzy = Projekty(self.runda, self.krok).ryzyko1()
-    
+
     def rys1(self, projekt=1):
         i = projekt-1
         fig, ax = plt.subplots()
         x = np.arange(0, 2*self.s_max-self.a_min, 1)
-        yt = stats.beta.pdf(x, self.alfa, self.beta, 
+        yt = stats.beta.pdf(x, self.alfa, self.beta,
                             loc=self.a[i], scale=self.b[i]-self.a[i])
         plt.plot(x, yt,'k')
         plt.fill_between(x, yt, color = 'r', where = (x <= self.koszty[i]), alpha=0.9)
@@ -268,25 +268,25 @@ class Wykresy(Projekty):
                          where = (x >= self.gran_ryzy['d'][i])
                          & (x <= self.gran_ryzy['g'][i]), alpha=0.5)
 
-        yt_max = stats.beta.pdf(self.s_min, self.alfa, self.beta, 
+        yt_max = stats.beta.pdf(self.s_min, self.alfa, self.beta,
                                 loc=self.a_max, scale=2*(self.s_min-self.a_max))
 
         p_s = 'p(s<k)='+ str(np.round((stats.beta.cdf(
-            self.koszty[i], self.alfa, self.beta, 
+            self.koszty[i], self.alfa, self.beta,
             loc=self.a[i], scale=self.b[i]-self.a[i])), 3))
-        ax.annotate(p_s,xy=(self.a[i]+(self.koszty[i]-self.a[i])*0.8,0.005), 
+        ax.annotate(p_s,xy=(self.a[i]+(self.koszty[i]-self.a[i])*0.8,0.005),
                     xycoords='data', xytext=(0.05,0.2), textcoords='axes fraction',
-                    arrowprops=dict(arrowstyle= '->', lw=0.7), va='center')      
-        
+                    arrowprops=dict(arrowstyle= '->', lw=0.7), va='center')
+
         gr = 'p(|z|)='+str(self.gran_ryzy['ryzyko'][i])
-        ax.annotate(gr ,xy=(self.sprz[i]+2, 0.01), 
+        ax.annotate(gr ,xy=(self.sprz[i]+2, 0.01),
             xycoords='data', xytext=(0.8,0.3), textcoords='axes fraction',
-            arrowprops=dict(arrowstyle= '->', lw=0.7), va='center') 
-        
+            arrowprops=dict(arrowstyle= '->', lw=0.7), va='center')
+
         kk = 'k= '+str(self.koszty[i])
         ss = 's= '+str(self.sprz[i])
         zz = 'z=s-k='+str(self.sprz[i]-self.koszty[i])
-        
+
         box = dict(fc='#fff9d0', lw=0)
         ax.text(self.koszty[i], 0.115, kk, ha='right', bbox=box)
         ax.text(self.sprz[i], 0.115, ss, ha='left', bbox= box)
@@ -304,28 +304,26 @@ class Wykresy(Projekty):
 
         ax.set_ylim(0, yt_max*1.1)
         ax.set_yticks(np.arange(0, yt_max, 0.01))
-        ax.yaxis.set_minor_locator(ticker.MultipleLocator(0.01))   
+        ax.yaxis.set_minor_locator(ticker.MultipleLocator(0.01))
 
         ax.set_xlim(0, 2*self.s_max-self.a_min)
         ax.set_xticks(np.arange(0, 2*self.s_max-self.a_min+5, 5))
         ax.xaxis.set_minor_locator(ticker.MultipleLocator(1))
-        
+
         fig.text(0.5, 0.05, 'przewidywana sprzedaż', ha='center', va='center', fontsize=11)
         fig.text(0.03, 0.5, 'prawdopodobieństwo', ha='center', va='center', rotation='vertical', fontsize=11)
         fig. tight_layout(pad=3, w_pad=1, h_pad=1)
         return fig
 
-
-        
     def rys2(self):
         gr_kw = {'left':0.08, 'right': 0.95,'bottom':0.08,
                  'top': 0.93, 'wspace':0, 'hspace':0}
         fig, ax = plt.subplots(nrows=3, ncols=3, sharex=True, sharey=True,
                       gridspec_kw = gr_kw, figsize=(11, 7))
-        
+
         for i, ax in enumerate(ax.flatten()):
             x = np.arange(0, 2*self.s_max-self.a_min, 1)
-            yt = stats.beta.pdf(x, self.alfa, self.beta, 
+            yt = stats.beta.pdf(x, self.alfa, self.beta,
                                 loc=self.a[i], scale=self.b[i]-self.a[i])
             ax.plot(x, yt,'k')
             ax.fill_between(x, yt, color = 'r', where = (x <= self.koszty[i]), alpha=0.5)
@@ -334,21 +332,21 @@ class Wykresy(Projekty):
                  where = (x >= self.gran_ryzy['d'][i])
                  & (x <= self.gran_ryzy['g'][i]), alpha=0.5)
 
-            yt_max = stats.beta.pdf(self.s_min, self.alfa, self.beta, 
+            yt_max = stats.beta.pdf(self.s_min, self.alfa, self.beta,
                                     loc=self.a_max, scale=2*(self.s_min-self.a_max))
 
             p_s = 'p='+ str(np.round((stats.beta.cdf(
-                self.koszty[i], self.alfa, self.beta, 
+                self.koszty[i], self.alfa, self.beta,
                 loc=self.a[i], scale=self.b[i]-self.a[i])), 3))
 
-            ax.annotate(p_s,xy=(self.a[i]+(self.koszty[i]-self.a[i])*0.8,0.005), 
+            ax.annotate(p_s,xy=(self.a[i]+(self.koszty[i]-self.a[i])*0.8,0.005),
                         xycoords='data', xytext=(0.05,0.2), textcoords='axes fraction',
                         arrowprops=dict(arrowstyle= '->', lw=0.7), va='center')
-            
+
             gr = 'p(|z|)='+str(self.gran_ryzy['ryzyko'][i])
-            ax.annotate(gr ,xy=(self.sprz[i]+2, 0.01), xycoords='data', 
+            ax.annotate(gr ,xy=(self.sprz[i]+2, 0.01), xycoords='data',
                         xytext=(0.7,0.4), textcoords='axes fraction',
-                        arrowprops=dict(arrowstyle= '->', lw=0.7), va='center') 
+                        arrowprops=dict(arrowstyle= '->', lw=0.7), va='center')
 
             kk = 'k= '+str(self.koszty[i])
             ss = 's= '+str(self.sprz[i])
@@ -373,7 +371,7 @@ class Wykresy(Projekty):
 
             ax.set_ylim(0, yt_max*1.1)
             ax.set_yticks(np.arange(0, yt_max, 0.02))
-            ax.yaxis.set_minor_locator(ticker.MultipleLocator(0.01))   
+            ax.yaxis.set_minor_locator(ticker.MultipleLocator(0.01))
 
             ax.set_xlim(0, 2*self.s_max-self.a_min)
             ax.set_xticks(np.arange(0, 2*self.s_max-self.a_min+5, 10))
@@ -383,7 +381,7 @@ class Wykresy(Projekty):
         fig.text(0.01, 0.5, 'prawdopodobieństwo', ha='center', va='center', rotation='vertical', fontsize=11)
         fig.patch.set_facecolor('#fff9d0')
         return fig
-    
+
     def rys3(self):
         fig, ax = plt.subplots(figsize=(7, 6))
         plt.rc('grid', linestyle="--", lw=0.3, color='black')
@@ -398,11 +396,9 @@ class Wykresy(Projekty):
         ax.set_xlim(0, 1)
         ax.set_xticks(np.arange(0, 1.1, 0.1))
         ax.xaxis.set_minor_locator(ticker.MultipleLocator(0.01))
-        
+
         fig.text(0.5, 0.05, 'zysk z portfela', ha='center', va='center', fontsize=11)
         fig.text(0.05, 0.5, 'ryzyko portfela', ha='center', va='center', rotation='vertical', fontsize=11)
         fig.patch.set_facecolor('#fff9d0')
         fig. tight_layout(pad=3, w_pad=1, h_pad=1)
         return fig
-    
-
