@@ -185,6 +185,54 @@
 
         });
 
+        function show_map(event){
+            let projects = [];
+            if (event) event.preventDefault();
+
+            $("[name='fields[]']").each(function () {
+                if (this.checked) {
+                    projects.push(this.id);
+                }
+            });
+            //Define Data to be sent
+            let formData = {
+                'round_id': $("[name='roundId']").val(),
+                'chosen_projects': projects
+            };
+
+            request = $.ajax({
+                headers: {'X-CSRFToken': $("[name=csrfmiddlewaretoken]").val()},
+                url: "{% url 'api-show-wallet' %}",
+                type: "post",
+                data: formData,
+                dataType: 'html',
+                encode: true
+            });
+            // Get the modal
+            let modal = document.getElementById("myModal");
+
+            // Callback handler that will be called on success
+            request.done(function (response, textStatus, jqXHR) {
+                //console.log(response);
+                modal.style.display = "block";
+                $('#modal_content').html(response);
+            });
+
+            // Callback handler that will be called on failure
+            request.fail(function (jqXHR, textStatus, errorThrown) {
+                //console.log(jqXHR);
+                //console.log(textStatus);
+                //console.log(errorThrown);
+                modal.style.display = "block";
+                $('#modal_content').html(errorThrown);
+            });
+
+            // Callback handler that will be called regardless
+            // if the request failed or succeeded
+            request.always(function () {
+
+            });
+        }
 
         function estimate_risk(event) {
             let projects = [];
