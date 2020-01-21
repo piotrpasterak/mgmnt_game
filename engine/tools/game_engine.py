@@ -3,10 +3,10 @@
 from itertools import combinations
 from json import loads, dumps
 from random import randint
+from math import log10, floor, ceil
 
 from django.conf import settings
-from matplotlib import pyplot as plt
-from matplotlib import ticker
+from matplotlib import pyplot as plt, ticker
 
 from process.models import Game, Round, Step
 from .portfolio import Runda, Krok
@@ -245,27 +245,79 @@ class WalletMapAnalysis(object):
             risks.append(self.runda.oszacuj_ryzyko(case))
         return risks, profits
 
+    def create_ticks(self, values):
+        # old ticks:
+        # if max(values) > 1:
+        #     # profits
+        #     return [10*x for x in range(11)]
+        # else:
+        #     # risks
+        #     return [0.1*x for x in range(11)]
+
+        # settings:
+        closest = 0.03 # at least 3% far from border
+        target_ticks = 10 # 10 ticks is optimal
+
+        minimum = min(values)
+        maximum = max(values)
+
+        # round to one decimal place, up/down for max/min
+        # ex.: (-12.32; 23,32) -> (-10, 30)
+        order = floor(log10(abs(minimum)))
+        new_minimum = floor(minimum / (10**order)) * (10**order)
+        order = floor(log10(abs(maximum)))
+        new_maximum = ceil(maximum / (10**order)) * (10**order)
+
+        # calculate how far is min to max
+        total_range = new_maximum - new_minimum
+
+        # get order of magnitude of total_range
+        step = 10**(floor(log10(total_range)))
+
+        # if the points are too close to the border
+        if abs(new_maximum - maximum)/step < closest:
+            new_maximum += step
+        if abs(new_minimum - minimum)/step < closest:
+            new_minimum -= step
+        total_range = new_maximum - new_minimum
+        total_steps = round(total_range / step)
+
+        # if there are too less ticks
+        ratio = floor(target_ticks / total_steps)
+        if abs(total_steps * ratio - target_ticks) > abs(total_steps * (ratio+1) - target_ticks):
+            ratio += 1
+        step /= ratio
+        total_steps = round(total_range / step) + 1 # +1 for the highest tick
+
+        result = [x * step + new_minimum for x in range(total_steps)]
+        # print(values, result)
+        return result, step, [new_minimum, new_maximum]
+
     def plot(self, projects_list):
         risks, profits = self.generate_data()
         one_risk = self.runda.oszacuj_ryzyko(projects_list)
         one_profit = self.sum_profits(projects_list)
 
+        plt.switch_backend('Agg')
         fig, ax = plt.subplots(figsize=(7, 6))
+
         ax.scatter(risks, profits,  edgecolor='k', facecolors = 'y', alpha=0.7, s = 50, lw =1)
         ax.scatter([one_risk], [one_profit],  edgecolor='k', facecolors = 'r', alpha=0.7, s = 50, lw =1)
 
         plt.rc('grid', linestyle="--", lw=0.3, color='black')
-        ax.grid('on', linestyle='--', lw=.3, c='grey')
+        plt.grid('on', linestyle='--', lw=.3, c='grey')
         ax.set_facecolor('whitesmoke')
-        ax.set_ylim(0, 100)
-        y_ticks = [10*x for x in range(11)]
+
+        y_ticks, step, ax_range = self.create_ticks(profits)
+        ax.set_ylim(ax_range[0], ax_range[1])
         plt.yticks(y_ticks)
-        ax.yaxis.set_minor_locator(ticker.MultipleLocator(1))
+        ax.yaxis.set_minor_locator(ticker.MultipleLocator(step/10))
         plt.ylabel("zysk z portfela")
-        ax.set_xlim(0, 1)
-        x_ticks = [0.1*x for x in range(11)]
+
+        x_ticks, step, ax_range = self.create_ticks(risks)
+        ax.set_xlim(ax_range[0], ax_range[1])
         plt.xticks(x_ticks)
-        ax.xaxis.set_minor_locator(ticker.MultipleLocator(0.01))
+        ax.xaxis.set_minor_locator(ticker.MultipleLocator(step/10))
         plt.xlabel("ryzyko portfela")
 
         return plt
