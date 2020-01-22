@@ -14,7 +14,6 @@
     <input id="generate_revenue" class="btn btn-success" disabled type="submit" value="Generuj ponownie">
         </div>
 </form>
-<button id="map" onclick="show_map(event)" disabled class="btn btn-warning">Mapa</button>
 <form id="form_new" class="form-horizontal" method="post" onsubmit="game_request(event, 'form_new', '{% url 'api-init-round' %}')">
     <input type="hidden" name="gameId" value="{{ game_id }}">
     <div class="col-6 float-right" style="margin-left: -38px">
@@ -22,6 +21,7 @@
     </div>
     </div>
 </form>
+<button id="map" onclick="show_map(event)" disabled class="btn btn-warning">Mapa</button>
 <script type="text/javascript">
     check_project_amount({{ round_data.k }}, {{ round_data.m }});
 </script>
