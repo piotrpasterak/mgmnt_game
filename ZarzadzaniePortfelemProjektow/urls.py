@@ -21,7 +21,7 @@ from pages.views import GameView, ResultsView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # path('accounts/', include('accounts.urls')),
+    path('accounts/', include('accounts.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
     path('game/', GameView.as_view(), name='game-main'),
     path('results/', ResultsView.as_view(), name='game-results'),
