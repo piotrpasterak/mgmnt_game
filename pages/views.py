@@ -47,7 +47,7 @@ class ResultsView(TemplateView):
             record = {}
             record['start_date'] = ro.start_date.strftime("%Y-%m-%d %H:%M:%S")
             record['end_date'] = ro.end_date.strftime("%Y-%m-%d %H:%M:%S")
-            record['total_time'] = ro.total_time
+            record['total_time'] = "%.2f" % ro.total_time
             record['children'] = self.restore_history_steps(ro.id)
             if len(record['children']) > 0:
                 # do not append empty round

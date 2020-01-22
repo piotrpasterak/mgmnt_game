@@ -114,6 +114,8 @@ class StepEngine(object):
             cost += self.runda.koszty[pr]
         step.cost = cost
 
+        step.risk = self.runda.oszacuj_ryzyko(choices)
+
         expected_profit = 0
         for pr in choices:
             expected_profit += self.runda.zyski[pr]
@@ -130,6 +132,7 @@ class StepEngine(object):
         step.save()
 
         self.step = step
+        self.ro.save()
         return step
 
 
