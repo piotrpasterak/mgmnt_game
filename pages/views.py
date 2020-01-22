@@ -31,8 +31,11 @@ class ResultsView(TemplateView):
             record = {}
             record['start_date'] = game.start_date.strftime("%Y-%m-%d %H:%M:%S")
             record['children'] = self.restore_history_rounds(game.id)
+            record['rowspan'] = 0
             if len(record['children']) > 0:
                 # do not append empty game
+                for child in record['children']:
+                    record['rowspan'] += child['rowspan']
                 result.append(record)
 
         return result
@@ -49,7 +52,8 @@ class ResultsView(TemplateView):
             record['end_date'] = ro.end_date.strftime("%Y-%m-%d %H:%M:%S")
             record['total_time'] = "%.2f" % ro.total_time
             record['children'] = self.restore_history_steps(ro.id)
-            if len(record['children']) > 0:
+            record['rowspan'] = len(record['children'])
+            if record['rowspan'] > 0:
                 # do not append empty round
                 result.append(record)
 

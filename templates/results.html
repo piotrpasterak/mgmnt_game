@@ -18,14 +18,20 @@
                     <th>Czas</th>
                     <th>Kosz</th>
                     <th>Ryzyko</th>
-                    <th>Zysk [spodziewany / uzyskany]</th>
-                    <th>Zwrot [spodziewany / uzyskany]</th>
+                    <th>Zysk*</th>
+                    <th>Zwrot*</th>
                 </tr>
                 {% for Round in Game.children %}
+                    {% with roundloop=forloop.counter0 %}
                     {% for Step in Round.children %}
+                        {% with steploop=forloop.counter0 %}
                         <tr>
-                            <td>{{ Game.start_date }}</td>
-                            <td>{{ Round.start_date }} - {{ Round.end_date }}</td>
+                            {% if roundloop == 0 and steploop == 0 %}
+                            <td rowspan="{{ Game.rowspan }}">{{ Game.start_date }}</td>
+                            {% endif %}
+                            {% if steploop == 0 %}
+                            <td rowspan="{{ Round.rowspan }}">{{ Round.start_date }} - {{ Round.end_date }}</td>
+                            {% endif %}
                             <td>{{ Step.start_date }} - {{ Step.end_date }}</td>
                             <td>{{ Step.total_time }}</td>
                             <td>{{ Step.cost }}</td>
@@ -33,10 +39,13 @@
                             <td>{{ Step.expected_profit }} / {{ Step.real_profit }}</td>
                             <td>{{ Step.expected_return }} / {{ Step.real_return }}</td>
                         </tr>
+                        {% endwith %}
                     {% endfor %}
+                    {% endwith %}
                 {% endfor %}
             </table>
         {% endfor %}
+        * - spodziewany / uzyskany
     </div>
 
 {% endblock %}
