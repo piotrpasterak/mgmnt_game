@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% load pages_content %}
+
+{% block title %}Results{% endblock %}
+
+{% block content %}
+
+    <div class="app">
+        <h1>Wyniki</h1>
+        <hr>
+        {% for Game in games %}
+            <table class="table table-bordered table-striped">
+                <tr>
+                    <th>Gra</th>
+                    <th>Runda</th>
+                    <th>Krok</th>
+                    <th>Czas</th>
+                    <th>Kosz</th>
+                    <th>Ryzyko</th>
+                    <th>Zysk*</th>
+                    <th>Zwrot*</th>
+                </tr>
+                {% for Round in Game.children %}
+                    {% with roundloop=forloop.counter0 %}
+                    {% for Step in Round.children %}
+                        {% with steploop=forloop.counter0 %}
+                        <tr>
+                            {% if roundloop == 0 and steploop == 0 %}
+                            <td rowspan="{{ Game.rowspan }}">{{ Game.start_date }}</td>
+                            {% endif %}
+                            {% if steploop == 0 %}
+                            <td rowspan="{{ Round.rowspan }}">{{ Round.start_date }} - {{ Round.end_date }}</td>
+                            {% endif %}
+                            <td>{{ Step.start_date }} - {{ Step.end_date }}</td>
+                            <td>{{ Step.total_time }}</td>
+                            <td>{{ Step.cost }}</td>
+                            <td>{{ Step.risk }}</td>
+                            <td>{{ Step.expected_profit }} / {{ Step.real_profit }}</td>
+                            <td>{{ Step.expected_return }} / {{ Step.real_return }}</td>
+                        </tr>
+                        {% endwith %}
+                    {% endfor %}
+                    {% endwith %}
+                {% endfor %}
+            </table>
+        {% endfor %}
+        * - spodziewany / uzyskany
+    </div>
+
+{% endblock %}
