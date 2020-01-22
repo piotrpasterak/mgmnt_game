@@ -7,6 +7,34 @@
 {% block content %}
     <h1>Wyniki</h1><hr>
 
-JAkieś tam wyniki
+    
+    <ul>
+    {% for Game in games %}
+        <li>
+            Gra: {{ Game.start_date }}
+            <ul>
+            {% for Round in Game.children %}
+                <li>
+                    Runda: {{ Round.start_date }} - {{ Round.end_date }}<br>
+                    Czas całkowity: {{ Round.total_time }} sekund
+                    <ul>
+                    {% for Step in Round.children %}
+                        <li>
+                            Krok: {{ Step.start_date }} - {{ Step.end_date }}<br>
+                            Czas całkowity: {{ Step.total_time }} sekund<br>
+                            Koszt: {{ Step.cost }}<br>
+                            Ryzyko: {{ Step.risk }}<br>
+                            [wartość spodziewana / wartość uzyskana]<br>
+                            Zysk: {{ Step.expected_profit }} / {{ Step.real_profit }}<br>
+                            Zwrot: {{ Step.expected_return }} / {{ Step.real_return }}
+                        </li>
+                    {% endfor %}
+                    </ul>
+                </li>
+            {% endfor %}
+            </ul>
+        </li>
+    {% endfor %}
+    </ul>
 
 {% endblock %}
