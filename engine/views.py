@@ -169,37 +169,22 @@ class ProjectView(PostTemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['project_id'] = self.post['project_id']
+        context['round_id'] = self.post['round_id']
         return context
 
 
 def ProjectImage(request, **kwargs):
-    print(kwargs)
-    import random
-    import django
-    import datetime
-    import io
+    round_id = int(kwargs['round_id'])
+    project_id = int(kwargs['project_id'])
 
-    from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
-    from matplotlib.figure import Figure
-    from matplotlib.dates import DateFormatter
+    wma = ProjectAnalysis(round_id)
+    plot = wma.plot(project_id)
 
-    fig=Figure()
-    ax=fig.add_subplot(111)
-    x=[]
-    y=[]
-    now=datetime.datetime.now()
-    delta=datetime.timedelta(days=1)
-    for i in range(10):
-        x.append(now)
-        now+=delta
-        y.append(random.randint(0, 1000))
-    ax.plot_date(x, y, '-')
-    ax.xaxis.set_major_formatter(DateFormatter('%Y-%m-%d'))
-    fig.autofmt_xdate()
-    canvas=FigureCanvas(fig)
-    buf = io.BytesIO()
-    canvas.print_png(buf)
-    response=django.http.HttpResponse(buf.getvalue(),content_type='image/jpg')
+    buf = BytesIO()
+    plot.savefig(buf, format="png")
+
+    response = HttpResponse(buf.getvalue(),content_type='image/png')
     return response
 
 
