@@ -5,36 +5,38 @@
 {% block title %}Results{% endblock %}
 
 {% block content %}
-    <h1>Wyniki</h1><hr>
 
-    
-    <ul>
-    {% for Game in games %}
-        <li>
-            Gra: {{ Game.start_date }}
-            <ul>
-            {% for Round in Game.children %}
-                <li>
-                    Runda: {{ Round.start_date }} - {{ Round.end_date }}<br>
-                    Czas całkowity: {{ Round.total_time }} sekund
-                    <ul>
+    <div class="app">
+        <h1>Wyniki</h1>
+        <hr>
+        {% for Game in games %}
+            <table class="table table-bordered table-striped">
+                <tr>
+                    <th>Gra</th>
+                    <th>Runda</th>
+                    <th>Krok</th>
+                    <th>Czas</th>
+                    <th>Kosz</th>
+                    <th>Ryzyko</th>
+                    <th>Zysk [spodziewany / uzyskany]</th>
+                    <th>Zwrot [spodziewany / uzyskany]</th>
+                </tr>
+                {% for Round in Game.children %}
                     {% for Step in Round.children %}
-                        <li>
-                            Krok: {{ Step.start_date }} - {{ Step.end_date }}<br>
-                            Czas całkowity: {{ Step.total_time }} sekund<br>
-                            Koszt: {{ Step.cost }}<br>
-                            Ryzyko: {{ Step.risk }}<br>
-                            [wartość spodziewana / wartość uzyskana]<br>
-                            Zysk: {{ Step.expected_profit }} / {{ Step.real_profit }}<br>
-                            Zwrot: {{ Step.expected_return }} / {{ Step.real_return }}
-                        </li>
+                        <tr>
+                            <td>{{ Game.start_date }}</td>
+                            <td>{{ Round.start_date }} - {{ Round.end_date }}</td>
+                            <td>{{ Step.start_date }} - {{ Step.end_date }}</td>
+                            <td>{{ Step.total_time }}</td>
+                            <td>{{ Step.cost }}</td>
+                            <td>{{ Step.risk }}</td>
+                            <td>{{ Step.expected_profit }} / {{ Step.real_profit }}</td>
+                            <td>{{ Step.expected_return }} / {{ Step.real_return }}</td>
+                        </tr>
                     {% endfor %}
-                    </ul>
-                </li>
-            {% endfor %}
-            </ul>
-        </li>
-    {% endfor %}
-    </ul>
+                {% endfor %}
+            </table>
+        {% endfor %}
+    </div>
 
 {% endblock %}
