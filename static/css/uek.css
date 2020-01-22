@@ -1,0 +1,359 @@
+@charset "UTF-8";
+/*Colors*/
+/*Mixins*/
+/*Extend/Inheritance*/
+#logged_as a:hover, .button-left li:hover, .button-left li:active {
+  text-shadow: 1px 1px 3px #8d0126;
+}
+
+/*Left top colored block*/
+.wy-side-nav-search {
+  text-shadow: 2px 2px 8px #000000;
+  background: transparent url(../img/applogo.png) no-repeat left;
+  background-color: white;
+  height: 150px;
+  width: 150px;
+}
+
+a.icon, a.icon-home {
+  visibility: hidden;
+}
+
+/*Icon left to title*/
+.fa-home:before, .icon-home:before {
+  content: "";
+}
+
+.wy-nav-top {
+  margin-top: 30px;
+  background-color: #dd4814;
+  text-shadow: 2px 2px 8px #000000;
+}
+
+/*Left bottom line*/
+.rst-versions {
+  border-top: solid 10px #f0f0f0;
+}
+
+/*Links*/
+a {
+  color: #dd4814;
+}
+
+#logged_as {
+  float: right !important;
+  font-size: 13px;
+  color: #fff;
+  text-shadow: 2px 2px 8px #000000;
+  margin-right: 20px;
+}
+
+#logged_as a:visited {
+  color: #dd4814;
+}
+
+#logged_as a:hover {
+  color: red;
+}
+
+/*Admin bar*/
+#adminbar {
+  direction: ltr;
+  color: #ccc;
+  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
+  height: 32px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  min-width: 600px;
+  z-index: 99999;
+  background: #484141;
+}
+
+.wy-nav-side {
+  margin-top: 32px;
+  background-color: #484141;
+}
+
+.wy-nav-content {
+  padding: 3.618em 3.236em;
+  background-color: #f1f1f1;
+  max-width: 2000px;
+}
+
+.windows {
+  display: inline-block;
+}
+
+/*Errors block*/
+.errors {
+  display: inline-block;
+  border: 1px solid #800000;
+  background-color: #F1EBE4;
+  height: 200px;
+  width: 380px;
+  position: relative;
+  top: 20px;
+  margin-left: 60px;
+}
+
+.errors h2 {
+  background: #006B80 url(../img/info4.png) no-repeat scroll 10px 2px;
+  color: #FFFFFF;
+  text-align: center;
+  font-size: 24px;
+  margin-top: 0;
+  padding: 5px;
+  text-shadow: 2px 2px 0px #000000;
+}
+
+#err_list {
+  padding: 20px;
+}
+
+/*Buttons*/
+#adminbar ul {
+  float: left;
+  top: 0;
+  line-height: 32px;
+  font-weight: 500;
+}
+
+.button-left li {
+  padding-left: 10px;
+  padding-right: 10px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.button-left li:hover {
+  background: #584f4f;
+}
+
+.button-left li:active {
+  background: black;
+}
+
+/*Sidebar*/
+/*Buttons*/
+.wy-menu-vertical {
+  /*Classes to color buttons */
+  /*arrow on lists*/
+}
+
+.wy-menu-vertical li.current > a, .wy-menu-vertical li.current > a:hover {
+  border-top: 1px solid #8d0126;
+  background-color: #8d0126;
+  color: white;
+  text-shadow: 1px 1px 2px #000000;
+  border-bottom: 1px solid #8d0126;
+  border-right: black solid 1px;
+  position: relative;
+}
+
+.wy-menu-vertical li.toc-current {
+  background: #d8d7d7;
+}
+
+.wy-menu-vertical li.blue > a, .wy-menu-vertical li.blue > a:hover {
+  border-top: 1px solid #27018d;
+  background-color: #27018d;
+  border-bottom: 1px solid #27018d;
+}
+
+.wy-menu-vertical li.green > a, .wy-menu-vertical li.green > a:hover {
+  border-top: 1px solid #004f48;
+  background-color: #004f48;
+  border-bottom: 1px solid #004f48;
+}
+
+.wy-menu-vertical li.current > a:after {
+  content: '';
+  width: 15px;
+  height: 15px;
+  background: #f1f1f1;
+  position: absolute;
+  -moz-transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+  transform: rotate(45deg);
+  top: 27%;
+  left: 142px;
+  border-left: black solid 1px;
+  border-bottom: black solid 1px;
+}
+
+.wy-menu-vertical li :active {
+  background-color: black;
+}
+
+.wy-menu-vertical li.on a:hover span.toctree-expand, .wy-menu-vertical .wy-menu-vertical li.current > a:hover span.toctree-expand {
+  color: white;
+}
+
+.wy-menu-vertical li.on a span.toctree-expand, .wy-menu-vertical .wy-menu-vertical li.current > a span.toctree-expand {
+  color: white;
+}
+
+/*Whole panel*/
+/*Change sidebar width*/
+.wy-nav-side, .rst-versions, .wy-menu-vertical {
+  width: 150px;
+}
+
+.wy-nav-content-wrap {
+  /*Content block*/
+  margin-left: 150px;
+  background-color: #f1f1f1;
+}
+
+.wy-body-for-nav {
+  background-size: 150px 1px;
+}
+
+/*Search app*/
+.headerlink {
+  visibility: hidden;
+}
+
+.input-group {
+  width: 100%;
+}
+
+/*Remove Bootstrap blue outline*/
+.form-control:focus {
+  border-color: #cccccc;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+
+/*Application div*/
+.app {
+  display: block;
+  margin: 16px;
+  padding: 23px;
+  border: 1px solid #e5e5e5;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+  background: #fff;
+}
+
+.app h1 {
+  font-size: 20px;
+}
+
+.app hr {
+  margin: 0;
+}
+
+/*Table*/
+table td {
+  padding: 10px 10px 0 10px;
+}
+
+.pcont {
+  margin-bottom: 10px;
+}
+
+.tdbutton {
+  padding: 0;
+}
+
+th {
+  text-align: center;
+}
+
+.invisible {
+  display: none;
+}
+
+.checkbox {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.row {
+  margin-bottom: 5px;
+}
+
+.col-centered {
+  float: none;
+  margin: 0 auto;
+}
+
+.table-responsive {
+  max-height: 500px;
+  overflow-y: auto;
+  overflow-x: auto;
+}
+
+.table td, .table th {
+  padding: 5px;
+  font-size: 14px;
+  text-align: center;
+}
+
+td > div {
+  max-height: 50px;
+  text-align: center;
+  display: inline-block;
+  overflow-y: auto;
+  overflow-x: auto;
+}
+
+textarea {
+  min-height: 49px;
+  height: auto;
+}
+
+.btn-big {
+  height: 150px;
+  width: 150px;
+  border-radius: 50%;
+  font-size: 25px;
+}
+
+ul.json-dict li, ol.json-array li {
+  list-style: none !important;
+}
+
+/* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 15%; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  max-width: 500px;
+}
+
+/* The Close Button */
+.close {
+  color: #aaaaaa;
+  float: right;
+  margin-left:90%;
+  height: 20px;
+  width: 20px;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}

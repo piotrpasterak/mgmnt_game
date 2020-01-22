@@ -1,17 +1,20 @@
 from datetime import datetime
 
+from django.conf import settings
 from django.db import models
+from django.utils import timezone
 
 # Create your models here.
 
 
 class Game(models.Model):
 
-    user = models.ForeignKey("accounts.User", on_delete=models.CASCADE, related_name='games')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='games')
     start_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return "game (%s) [%s]" % (str(self.start_date), str(self.user))
+        datestring = self.start_date.strftime("%Y-%m-%d %H:%M:%S")
+        return "game (%s) [%s]" % (datestring, str(self.user))
 
 
 class Round(models.Model):
@@ -20,18 +23,20 @@ class Round(models.Model):
 
     start_date = models.DateTimeField(auto_now_add=True)
     end_date = models.DateTimeField(auto_now=True)
-    total_time = models.FloatField(blank=True, null=True)
+    total_time = models.FloatField(default=0)
 
     seed = models.IntegerField(blank=True, null=True)
     possibilities = models.TextField(blank=True, null=True)
 
     def __str__(self):
-        return "round (%s) [%s, game (%s)]" % (str(self.seed), str(self.game.user), str(self.game.start_date))
+        datestring = self.start_date.strftime("%Y-%m-%d %H:%M:%S")
+        return "%s, %s: round %s" % (str(self.game.user), datestring, self.seed)
 
     def calculate_total_time(self):
-        n = datetime.now()
+        n = timezone.now()
         delta = n - self.start_date
-        return delta.total_seconds()
+        self.total_time = delta.total_seconds()
+        return self.total_time
 
     def save(self, *args, **kwargs):
         if self.start_date:
@@ -59,14 +64,19 @@ class Step(models.Model):
     real_return = models.FloatField(blank=True, null=True)
 
     def __str__(self):
-        values = (str(self.seed), str(self.parent_round.game.user),
-            str(self.parent_round.game.start_date), str(self.parent_round.seed))
-        return "step (%s) [%s, game (%s), round (%s)]" % values
+        datestring = self.start_date.strftime("%Y-%m-%d %H:%M:%S")
+        seed = self.seed
+        if seed is None:
+            seed = "(blank)"
+        values = (str(self.parent_round.game.user), datestring,
+            self.parent_round.seed, seed)
+        return "%s, %s: step %s, round %s" % values
 
     def calculate_total_time(self):
-        n = datetime.now()
+        n = timezone.now()
         delta = n - self.start_date
-        return delta.total_seconds()
+        self.total_time = delta.total_seconds()
+        return self.total_time
 
     def save(self, *args, **kwargs):
         if self.start_date:

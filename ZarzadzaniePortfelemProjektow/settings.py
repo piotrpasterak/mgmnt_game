@@ -122,6 +122,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
+LOGIN_REDIRECT_URL = 'game-main'
+LOGOUT_REDIRECT_URL = 'home'
+
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 
@@ -131,6 +134,8 @@ STATICFILES_DIRS = [
 MEDIA_DIRS = [
     os.path.join(BASE_DIR, "media"),
 ]
+
+MAX_SEED = 2147483647 # max number stored in DB
 
 try:
     from .local_settings import *

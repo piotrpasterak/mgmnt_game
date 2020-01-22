@@ -1,0 +1,27 @@
+{% load api_filters %}
+
+<form id="form_repeat" class="form-horizontal" method="post" onsubmit="game_request_timeout(event, 'form_repeat', '{% url 'api-submit-round' %}')">
+    <input type="hidden" name="gameId" value="{{ game_id }}">
+    <input type="hidden" name="roundId" value="{{ round_id }}">
+    <input type="hidden" name="roundSeed" value="{{ round.seed }}">
+    <input type="hidden" name="stepId" value="{{ step_id }}">
+    <input type="hidden" name="oldStepId" value="{{ old_step_id }}">
+    {% csrf_token %}
+    {% game_table round_data round_iterator checkboxes  results %}
+    <div id="risk" style="margin-bottom: 15px;"></div>
+    <div class="row">
+        <div class="col-6">
+    <input id="generate_revenue" class="btn btn-success" disabled type="submit" value="Generuj ponownie">
+        </div>
+</form>
+<button id="map" onclick="show_map(event)" disabled class="btn btn-warning">Mapa</button>
+<form id="form_new" class="form-horizontal" method="post" onsubmit="game_request(event, 'form_new', '{% url 'api-init-round' %}')">
+    <input type="hidden" name="gameId" value="{{ game_id }}">
+    <div class="col-6 float-right" style="margin-left: -38px">
+    <input class="btn btn-warning" type="submit" value="Nowa runda">
+    </div>
+    </div>
+</form>
+<script type="text/javascript">
+    check_project_amount({{ round_data.k }}, {{ round_data.m }});
+</script>

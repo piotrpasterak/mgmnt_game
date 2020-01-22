@@ -1,0 +1,100 @@
+<table class="table table-bordered table-striped">
+    <tr>
+        <th colspan="4">
+            Twój bieżący portfel
+        </th>
+        <th colspan="3">
+            Realizacja zysków portfela
+        </th>
+    </tr>
+    <tr>
+        <td rowspan="4">
+            <strong>
+                {% for number in projects %}
+                    Projekt{{ number }}
+                    {% if forloop.counter %}
+                        <br>
+                    {% endif %}
+                {% endfor %}
+            </strong>
+        </td>
+        <td>
+            Koszt
+        </td>
+        <td>
+            =
+        </td>
+        <td>
+            {{ cost }}
+        </td>
+        <td>
+            Koszt
+        </td>
+        <td>
+            =
+        </td>
+        <td>
+            {% if real_profit %}{{ cost }}{% endif %}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Zysk
+        </td>
+        <td>
+            =
+        </td>
+        <td>
+            {{ expected_profit }}
+        </td>
+        <td>
+            Zysk
+        </td>
+        <td>
+            =
+        </td>
+        <td>
+            {% if real_profit %}{{ real_profit }}{% endif %}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Zwrot
+        </td>
+        <td>
+            =
+        </td>
+        <td>
+            {{ expected_return }}
+        </td>
+        <td>
+            Zwrot
+        </td>
+        <td>
+            =
+        </td>
+        <td>
+            {% if real_profit %}{{ real_return }}{% endif %}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Ryzyko
+        </td>
+        <td>
+            =
+        </td>
+        <td>
+            {{ risk }}
+        </td>
+        <td>
+            Ryzyko
+        </td>
+        <td>
+            =
+        </td>
+        <td>
+            {% if real_profit %}{{ risk }}{% endif %}
+        </td>
+    </tr>
+</table>

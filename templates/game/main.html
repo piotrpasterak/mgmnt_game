@@ -1,0 +1,320 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}Game{% endblock %}
+
+{% block content %}
+    <div id="myModal" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="modal_content"></div>
+        </div>
+
+    </div>
+    <div id="game-main" class="app">
+        <form id="form_game" class="form-horizontal" method="post"
+              onsubmit="game_request(event, 'form_game', '{% url 'api-init-game' %}')">
+            {% csrf_token %}
+            <div class="container">
+                <h1>Zarządzanie Portfelem Projektów</h1>
+                <hr>
+                <div class="row">
+                    <div class="col-centered">
+                        <p>Wciśnij przycisk żeby rozpocząć grę</p>
+                    </div>
+
+                </div>
+                <div class="row" style="margin-top:20px">
+                    <div class="col-6 col-centered">
+                        <span class="input-group-btn">
+                            <input id="submit" class="btn btn-danger btn-big" type="submit" name="submit"
+                                   value="S T A R T">
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script type="text/javascript">
+        function game_request(event, form, targetUrl, intervalList=[]) {
+            let request;
+
+            event.preventDefault();
+
+            // Abort any pending request
+            if (request) {
+                request.abort();
+            }
+
+            //Define Data to be sent
+            let formData = $('#' + form).serialize();
+
+            // Fire off the request to backend
+            request = $.ajax({
+                headers: {'X-CSRFToken': $("[name=csrfmiddlewaretoken]").val()},
+                url: targetUrl,
+                type: "post",
+                data: formData,
+                dataType: 'html',
+                encode: true
+            });
+
+            // Callback handler that will be called on success
+            request.done(function (response, textStatus, jqXHR) {
+                if (intervalList) clearIntervalList(intervalList);
+                $('#game-main').html(response);
+            });
+
+            // Callback handler that will be called on failure
+            request.fail(function (jqXHR, textStatus, errorThrown) {
+                if (intervalList) clearIntervalList(intervalList);
+                $('#game-main').html(errorThrown);
+            });
+
+            // Callback handler that will be called regardless
+            // if the request failed or succeeded
+            request.always(function () {
+            });
+        }
+
+        function game_request_timeout(event, form, targetUrl){
+            event.preventDefault();
+            var deltaTime = 1000; // 1 second
+            var intervalList = randomizeResults();
+            setTimeout(function(){
+                    game_request(event, form, targetUrl, intervalList);
+                }, deltaTime);
+        }
+
+
+        function check_project_amount(lower_limit, upper_limit) {
+            let amount_of_checked = 0;
+            $("[name='fields[]']").each(function () {
+                if (this.checked) {
+                    amount_of_checked++;
+                }
+            });
+            $("#generate_revenue").prop('disabled', amount_of_checked < lower_limit || amount_of_checked > upper_limit);
+            $("#map").prop('disabled', amount_of_checked < lower_limit || amount_of_checked > upper_limit);
+            if (amount_of_checked > 0) {
+                estimate_risk();
+            } else {
+                $('#risk').html('');
+            }
+        }
+
+        function load_project_graph(event, project_id) {
+            let request;
+            event.preventDefault();
+
+            // Abort any pending request
+            if (request) {
+                request.abort();
+            }
+
+            //Define Data to be sent
+            let formData = {
+                'project_id': project_id,
+                'round_id': $("[name='roundId']").val()
+            };
+
+
+            // Fire off the request to backend
+            request = $.ajax({
+                headers: {'X-CSRFToken': $("[name=csrfmiddlewaretoken]").val()},
+                url: "{% url 'api-show-project' %}",
+                type: "post",
+                data: formData,
+                dataType: 'html',
+                encode: true
+            });
+
+            // Get the modal
+            let modal = document.getElementById("myModal");
+
+            // Callback handler that will be called on success
+            request.done(function (response, textStatus, jqXHR) {
+                //console.log(response);
+                modal.style.display = "block";
+                $('#modal_content').html(response);
+            });
+
+            // Callback handler that will be called on failure
+            request.fail(function (jqXHR, textStatus, errorThrown) {
+                //console.log(jqXHR);
+                //console.log(textStatus);
+                //console.log(errorThrown);
+                modal.style.display = "block";
+                $('#modal_content').html(errorThrown);
+            });
+
+            // Callback handler that will be called regardless
+            // if the request failed or succeeded
+            request.always(function () {
+
+            });
+
+
+        }
+
+        $(document).ready(function () {
+
+            // Get the modal
+            let modal = document.getElementById("myModal");
+            // Get the <span> element that closes the modal
+            let span = document.getElementsByClassName("close")[0];
+
+
+            // When the user clicks on <span> (x), close the modal
+            span.onclick = function () {
+                modal.style.display = "none";
+            };
+
+            // When the user clicks anywhere outside of the modal, close it
+            window.onclick = function (event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+
+
+        });
+
+        function show_map(event){
+            let projects = [];
+            if (event) event.preventDefault();
+
+            $("[name='fields[]']").each(function () {
+                if (this.checked) {
+                    projects.push(this.id);
+                }
+            });
+            //Define Data to be sent
+            let formData = {
+                'round_id': $("[name='roundId']").val(),
+                'chosen_projects': projects
+            };
+
+            request = $.ajax({
+                headers: {'X-CSRFToken': $("[name=csrfmiddlewaretoken]").val()},
+                url: "{% url 'api-show-wallet' %}",
+                type: "post",
+                data: formData,
+                dataType: 'html',
+                encode: true
+            });
+            // Get the modal
+            let modal = document.getElementById("myModal");
+
+            // Callback handler that will be called on success
+            request.done(function (response, textStatus, jqXHR) {
+                //console.log(response);
+                modal.style.display = "block";
+                $('#modal_content').html(response);
+            });
+
+            // Callback handler that will be called on failure
+            request.fail(function (jqXHR, textStatus, errorThrown) {
+                //console.log(jqXHR);
+                //console.log(textStatus);
+                //console.log(errorThrown);
+                modal.style.display = "block";
+                $('#modal_content').html(errorThrown);
+            });
+
+            // Callback handler that will be called regardless
+            // if the request failed or succeeded
+            request.always(function () {
+
+            });
+        }
+
+        function estimate_risk(event) {
+            let projects = [];
+            if (event) event.preventDefault();
+
+            $("[name='fields[]']").each(function () {
+                if (this.checked) {
+                    projects.push(this.id);
+                }
+            });
+
+
+            //Define Data to be sent
+            let formData = {
+                'round_id': $("[name='roundId']").val(),
+                'chosen_projects': projects
+            };
+            if (!event){
+                formData['step_id'] = $("[name='oldStepId']").val();
+            }
+
+
+            // Fire off the request to backend
+            request = $.ajax({
+                headers: {'X-CSRFToken': $("[name=csrfmiddlewaretoken]").val()},
+                url: "{% url 'api-calculate-wallet' %}",
+                type: "post",
+                data: formData,
+                dataType: 'html',
+                encode: true
+            });
+
+
+            // Callback handler that will be called on success
+            request.done(function (response, textStatus, jqXHR) {
+                $('#risk').html(response);
+            });
+
+            // Callback handler that will be called on failure
+            request.fail(function (jqXHR, textStatus, errorThrown) {
+                $('#risk').html(errorThrown);
+            });
+
+            // Callback handler that will be called regardless
+            // if the request failed or succeeded
+            request.always(function () {
+
+            });
+
+        }
+
+        function randomizeResults(){
+            var itr = 0;
+            var resultList = [];
+            var namespace = 'expectedResults';
+            var valueAround, temp;
+            while($("#" + namespace + itr.toString()).length > 0 ){
+                temp = $("#" + namespace + itr.toString())[0];
+                valueAround = parseInt(temp.innerText);
+                resultList.push(randomizeOneResult(itr, valueAround));
+                itr += 1;
+            }
+            return resultList;
+        }
+
+        function randomizeOneResult(number, expected){
+            var deltaTime = 70;
+            var deltaValue = 20;
+            var namespace = 'realResults';
+            var newId = setInterval(function(){
+                    var newValue = (Math.random() - 0.5) * deltaValue + expected;
+                    var target = $("#" + namespace + number.toString())[0];
+                    target.innerText = parseInt(newValue).toString();
+                }, deltaTime);
+            return newId;
+        }
+
+        function clearIntervalList(lista){
+            for(var itr=0; itr<lista.length; itr++){
+                clearInterval(lista[itr]);
+            }
+        }
+    </script>
+{% endblock %}

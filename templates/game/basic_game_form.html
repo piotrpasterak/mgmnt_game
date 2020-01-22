@@ -1,0 +1,46 @@
+{% load api_filters %}
+
+<table class="table table-bordered table-striped">
+    <tr>
+        <th>&nbsp;</th>
+        <th>Koszt</th>
+        <th>Zysk</th>
+        <th>Zwrot</th>
+        <th>Ryzyko</th>
+        <th>&nbsp;</th>
+        <th>Wynik</th>
+    </tr>
+    {% for itr in round_iterator %}
+        <tr>
+            <td >
+                <button class="btn-light" onclick="load_project_graph(event, {{ itr }})">Projekt{{ itr }}</button>
+            </td>
+            <td>
+                {{ round_data.koszty|get_at_index:forloop.counter0 }}
+            </td>
+            <td id="expectedResults{{ forloop.counter0 }}">
+                {{ round_data.zyski|get_at_index:forloop.counter0 }}
+            </td>
+            <td>
+                {{ round_data.zwrot|get_at_index:forloop.counter0 }}
+            </td>
+            <td>
+                {{ round_data.ryzyko|get_at_index:forloop.counter0 }}
+            </td>
+            <td>
+                <label>
+                    <input type="checkbox"
+                            onchange="check_project_amount({{ round_data.k }}, {{ round_data.m }})"
+                            name="fields[]" id="{{ forloop.counter0 }}"
+                            value={{ forloop.counter0 }}{% if checkboxes %}{{ checkboxes|get_at_index:forloop.counter0 }}{% endif %}>
+                    P{{ forloop.counter }}
+                </label>
+            </td>
+            <td id="realResults{{ forloop.counter0 }}">
+                {% if results %}
+                    {{ results|get_at_index:forloop.counter0 }}
+                {% else %} --- {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+</table>
