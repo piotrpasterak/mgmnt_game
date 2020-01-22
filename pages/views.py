@@ -72,7 +72,7 @@ class ResultsView(TemplateView):
         for step in s:
             record = {}
             record['start_date'] = step.start_date.strftime("%Y-%m-%d %H:%M:%S")
-            record['end_date'] = step.start_date.strftime("%Y-%m-%d %H:%M:%S")
+            record['end_date'] = step.end_date.strftime("%Y-%m-%d %H:%M:%S")
             for key in copy_names:
                 try:
                     record[key[0]] = key[1] % getattr(step, key[0])
