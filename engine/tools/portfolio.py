@@ -135,7 +135,7 @@ class Runda(Baza):
 
         # # do tworzenia tabeli
         # self.columns = ['koszt', 'zysk', 'zwrot', 'ryzyko']
-        # self.index = ['P'+str(p+1) for p in range(self.projekty)]
+        self.index = ['P'+str(p+1) for p in range(self.projekty)]
         # self.data = zip(self.koszty, self.zyski, self.zwrot, self.ryzyko)
         # self.dane = pd.DataFrame(self.data, columns=self.columns, index = self.index)
         return

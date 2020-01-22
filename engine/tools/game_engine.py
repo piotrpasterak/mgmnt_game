@@ -7,6 +7,8 @@ from math import log10, floor, ceil
 
 from django.conf import settings
 from matplotlib import pyplot as plt, ticker
+import numpy as np
+from scipy import stats
 
 from process.models import Game, Round, Step
 from .portfolio import Runda, Krok
@@ -203,6 +205,92 @@ class ProjectAnalysis(object):
         runda = Runda(self.ro.seed)
         runda.rozpakuj_dane(self.ro.possibilities)
         self.runda = runda
+
+    def ryzyko1(self):
+        runda = self.runda
+        d = np.round((runda.sprz*0.9),0).astype(int)
+        g = np.round((runda.sprz*1.1),0).astype(int)
+        RYZYKO = []
+        for i in range(runda.projekty):
+            yd = stats.beta.cdf(d[i], runda.alfa, runda.beta,
+                                loc=runda.a[i], scale=runda.b[i]-runda.a[i])
+            yg = stats.beta.cdf(g[i], runda.alfa, runda.beta,
+                                loc=runda.a[i], scale=runda.b[i]-runda.a[i])
+            ryzyko = np.round(yg-yd, 2)
+            RYZYKO.append(ryzyko)
+        index = runda.index
+        result = {}
+        result['d'] = d
+        result['g'] = g
+        result['ryzyko'] = RYZYKO
+        return result
+
+    def plot(self, project_id):
+        runda = self.runda
+        gran_ryzy = self.ryzyko1()
+
+        plt.switch_backend('Agg')
+
+
+        i = project_id-1
+        fig, ax = plt.subplots()
+        x = np.arange(0, 2*runda.s_max-runda.a_min, 1)
+        yt = stats.beta.pdf(x, runda.alfa, runda.beta,
+                            loc=runda.a[i], scale=runda.b[i]-runda.a[i])
+        plt.plot(x, yt,'k')
+        plt.fill_between(x, yt, color = 'r', where = (x <= runda.koszty[i]), alpha=0.9)
+        plt.fill_between(x, yt, color = 'r',  where = (x >= runda.koszty[i]), alpha=0.5)
+        plt.fill_between(x, yt, color = 'w',
+                         where = (x >= gran_ryzy['d'][i])
+                         & (x <= gran_ryzy['g'][i]), alpha=0.5)
+
+        yt_max = stats.beta.pdf(runda.s_min, runda.alfa, runda.beta,
+                                loc=runda.a_max, scale=2*(runda.s_min-runda.a_max))
+
+        p_s = 'p(s<k)='+ str(np.round((stats.beta.cdf(
+            runda.koszty[i], runda.alfa, runda.beta,
+            loc=runda.a[i], scale=runda.b[i]-runda.a[i])), 3))
+        ax.annotate(p_s,xy=(runda.a[i]+(runda.koszty[i]-runda.a[i])*0.8,0.005),
+                    xycoords='data', xytext=(0.05,0.2), textcoords='axes fraction',
+                    arrowprops=dict(arrowstyle= '->', lw=0.7), va='center')
+
+        gr = 'p(|z|)='+str(gran_ryzy['ryzyko'][i])
+        ax.annotate(gr ,xy=(runda.sprz[i]+2, 0.01),
+            xycoords='data', xytext=(0.8,0.3), textcoords='axes fraction',
+            arrowprops=dict(arrowstyle= '->', lw=0.7), va='center')
+
+        kk = 'k= '+str(runda.koszty[i])
+        ss = 's= '+str(runda.sprz[i])
+        zz = 'z=s-k='+str(runda.sprz[i]-runda.koszty[i])
+
+        box = dict(fc='#fff9d0', lw=0)
+        ax.text(runda.koszty[i], 0.115, kk, ha='right', bbox=box)
+        ax.text(runda.sprz[i], 0.115, ss, ha='left', bbox= box)
+        ax.text(runda.sprz[i]+3, 0.1, zz, va='center', ha='left', bbox= box)
+        ax.text(60, 0.115, 'Projekt '+str(i+1), weight='bold')
+
+        ax.vlines(runda.koszty[i], 0, 0.11, lw =0.7, color='k', fc ='k', ls= '--')
+        ax.vlines(runda.sprz[i], 0, 0.11, lw =0.7, color='k', fc ='k', ls= '--')
+        ax.hlines(0.1, runda.koszty[i], runda.sprz[i]+5, color='k', fc ='k', lw =0.76)
+        ax.scatter([runda.koszty[i], runda.sprz[i]], [0.1, 0.1], marker='.')
+
+        ax.grid('on', linestyle='--', lw=.3, c='grey')
+        ax.set_facecolor('#fff9d0')
+        fig.patch.set_facecolor('#fff9d0')
+
+        ax.set_ylim(0, yt_max*1.1)
+        ax.set_yticks(np.arange(0, yt_max, 0.01))
+        ax.yaxis.set_minor_locator(ticker.MultipleLocator(0.01))
+
+        ax.set_xlim(0, 2*runda.s_max-runda.a_min)
+        ax.set_xticks(np.arange(0, 2*runda.s_max-runda.a_min+5, 5))
+        ax.xaxis.set_minor_locator(ticker.MultipleLocator(1))
+
+        plt.xlabel('przewidywana sprzedaż', fontsize=11)
+        plt.ylabel('prawdopodobieństwo', fontsize=11)
+        fig.tight_layout(pad=3, w_pad=1, h_pad=1)
+
+        return plt
 
 
 class WalletMapAnalysis(object):
