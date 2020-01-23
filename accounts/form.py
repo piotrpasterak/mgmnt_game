@@ -1,5 +1,5 @@
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
+from .models import CustomUser
 from django import forms
 
 
@@ -20,10 +20,10 @@ class UserCreateForm(UserCreationForm):
 
     email = forms.EmailField(required= True,  help_text='Wymagane. Podaj poprawny email.', label="Email")
     gender = forms.ChoiceField(help_text='Opcjonalne. Wybierz z listy.', choices= _GENDER, widget=forms.Select, label="Płeć")
-    experience = forms.ChoiceField(help_text='Optional. Wybierz z listy.', choices=_EXPERIENCE, widget=forms.Select, label="Doświadczenie zawodowe")
+    experience = forms.ChoiceField(help_text='Opcjonalne. Wybierz z listy.', choices=_EXPERIENCE, widget=forms.Select, label="Doświadczenie zawodowe")
 
     class Meta:
-        model = User
+        model = CustomUser
         fields = ('username', 'email', 'gender', 'experience', 'password1', 'password2',)
 
     def __init__(self, *args, **kwargs):
