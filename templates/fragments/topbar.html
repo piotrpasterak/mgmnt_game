@@ -22,6 +22,9 @@
                 <span><a id="logout" href="{% url 'login' %}">Zaloguj się</a></span>
                 <b>lub</b>
                 <span><a id="logout" href="{% url 'signup' %}">Zarejestruj</a></span>
+                <b>  </b>
+                <span><a id="admin" href="{% url 'admin:index' %}">Admin</a></span>
+
             {% endif %}
         </li>
     </ul>
