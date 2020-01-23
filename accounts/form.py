@@ -1,29 +1,29 @@
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
+from .models import CustomUser
 from django import forms
 
 
 class UserCreateForm(UserCreationForm):
     _GENDER = (
-        ('U', 'Prefer not to say'),
-        ('M', 'Male'),
-        ('F', 'Female'),
+        ('U', 'Nie deklaruje'),
+        ('M', 'Meżczyzna'),
+        ('F', 'Kobieta'),
     )
 
     _EXPERIENCE = (
-        (0, 'None'),
-        (1, 'Less than 1 year'),
-        (2, 'Less than 2 year'),
-        (3, 'Less than 3 year'),
-        (4, 'More than 3 year'),
+        (0, 'Żadne'),
+        (1, 'Mniej niz 1 rok'),
+        (2, 'Mniej niz 2 lata'),
+        (3, 'Mniej niz 3 lata'),
+        (4, 'Wiecej niz 3 lata'),
     )
 
-    email = forms.EmailField(required= True,  help_text='Required. Please enter correct email.' )
-    gender = forms.ChoiceField(help_text='Optional. Please choose from list.', choices= _GENDER, widget=forms.Select)
-    experience = forms.ChoiceField(help_text='Optional. Please choose from list.', choices=_EXPERIENCE, widget=forms.Select)
+    email = forms.EmailField(required= True,  help_text='Wymagane. Podaj poprawny email.', label="Email")
+    gender = forms.ChoiceField(help_text='Opcjonalne. Wybierz z listy.', choices= _GENDER, widget=forms.Select, label="Płeć")
+    experience = forms.ChoiceField(help_text='Opcjonalne. Wybierz z listy.', choices=_EXPERIENCE, widget=forms.Select, label="Doświadczenie zawodowe")
 
     class Meta:
-        model = User
+        model = CustomUser
         fields = ('username', 'email', 'gender', 'experience', 'password1', 'password2',)
 
     def __init__(self, *args, **kwargs):
