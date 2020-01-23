@@ -18,7 +18,7 @@
                 <span><a class="nav-item"  id="logout" href="{% url 'logout' %}">wyloguj</a></span>
                 <b>lub</b>
                 <span><a class="nav-item"  id="logout" href="{% url 'password_reset' %}">zmień hasło</a></span>
-                {% if user.is_superuser %}
+                {% if user.is_staff %}
                     <b>lub</b>
                     <span><a class="nav-item" id="admin" href="{% url 'admin:index' %}">Admin Panel</a></span>
                 {% endif %}
