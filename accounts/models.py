@@ -1,14 +1,14 @@
 from django.db import models
-
 from django.contrib.auth.hashers import check_password as ckpass,\
     make_password as mkpass, is_password_usable as ispassuse
 
-# Create your models here.
 
 class User(models.Model):
     nick = models.CharField(max_length=127)
     password = models.CharField(max_length=127)
     email = models.CharField(max_length=255)
+    gender = models.CharField(max_length=7)
+    experience = models.IntegerField(default=0)
 
     def __str__(self):
         return self.nick
