@@ -35,10 +35,13 @@ class GameEngine(object):
         return
 
     def init_game(self, user):
-        new_game = Game()
-        new_game.user = user
-        new_game.save()
-        return new_game
+        if user.is_authenticated:
+            new_game = Game()
+            new_game.user = user
+            new_game.save()
+            return new_game
+        else :
+            return None
 
 
 class RoundEngine(object):

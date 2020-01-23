@@ -49,24 +49,25 @@ class InitGame(PostTemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        ge = GameEngine()
-        g =ge.init_game(self.request.user)
-        context['game'] = g
-        context['game_id'] = g.id
+        if self.request.user.is_authenticated:
+            ge = GameEngine()
+            g =ge.init_game(self.request.user)
+            context['game'] = g
+            context['game_id'] = g.id
 
-        re = RoundEngine(g)
-        r = re.init_round()
-        context['round'] = r
-        context['round_id'] = r.id
-        context['round_data'] = loads(r.possibilities)
-        context['round_iterator'] = list(range(1, context['round_data']['projekty']+1))
+            re = RoundEngine(g)
+            r = re.init_round()
+            context['round'] = r
+            context['round_id'] = r.id
+            context['round_data'] = loads(r.possibilities)
+            context['round_iterator'] = list(range(1, context['round_data']['projekty']+1))
 
-        se = StepEngine(r)
-        s = se.blank_step()
-        context['step'] = s
-        context['step_id'] = s.id
+            se = StepEngine(r)
+            s = se.blank_step()
+            context['step'] = s
+            context['step_id'] = s.id
 
-        return context
+            return context
 
 
 class RoundSubmit(PostTemplateView):
