@@ -15,15 +15,18 @@
         <li>
             {% if user.is_authenticated %}
                 <b> {{ user.username }} :</b>
-                <span><a id="logout" href="{% url 'logout' %}">wyloguj</a></span>
+                <span><a class="nav-item"  id="logout" href="{% url 'logout' %}">wyloguj</a></span>
                 <b>lub</b>
-                <span><a id="logout" href="{% url 'password_reset' %}">zmień hasło</a></span>
+                <span><a class="nav-item"  id="logout" href="{% url 'password_reset' %}">zmień hasło</a></span>
+                {% if user.is_staff %}
+                    <b>lub</b>
+                    <span><a class="nav-item" id="admin" href="{% url 'admin:index' %}">Admin Panel</a></span>
+                {% endif %}
             {% else %}
                 <span><a id="logout" href="{% url 'login' %}">Zaloguj się</a></span>
                 <b>lub</b>
                 <span><a id="logout" href="{% url 'signup' %}">Zarejestruj</a></span>
                 <b>  </b>
-                <span><a id="admin" href="{% url 'admin:index' %}">Admin</a></span>
 
             {% endif %}
         </li>
