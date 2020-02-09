@@ -17,10 +17,11 @@ from django.contrib import admin
 from django.urls import path, include
 from django.views.generic.base import TemplateView
 
-from pages.views import GameView, ResultsView
+from pages.views import GameView, ResultsView, export_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('export.csv', export_view, name="export_to_csv"),
     path('accounts/', include('accounts.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
     path('game/', GameView.as_view(), name='game-main'),
