@@ -15,13 +15,13 @@
         <li>
             {% if user.is_authenticated %}
                 <b> {{ user.username }} :</b>
+                {% if user.is_staff %}
+                    <span><a class="nav-item" id="admin" href="{% url 'admin:index' %}">Admin Panel</a></span>,
+                    <span><a class="nav-item" id="export" href="{% url 'export_to_csv' %}">CSV Eksport</a></span>,
+                {% endif %}
                 <span><a class="nav-item"  id="logout" href="{% url 'logout' %}">wyloguj</a></span>
                 <b>lub</b>
                 <span><a class="nav-item"  id="logout" href="{% url 'password_reset' %}">zmień hasło</a></span>
-                {% if user.is_staff %}
-                    <b>lub</b>
-                    <span><a class="nav-item" id="admin" href="{% url 'admin:index' %}">Admin Panel</a></span>
-                {% endif %}
             {% else %}
                 <span><a id="logout" href="{% url 'login' %}">Zaloguj się</a></span>
                 <b>lub</b>
